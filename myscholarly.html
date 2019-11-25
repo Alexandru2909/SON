@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="project, info, poem" />
+    <title>Son</title>
+    <link rel="stylesheet" href="scholarly.css">
+</head>
+<body>
+    <header>
+        <p class="title">SON Documentation</p>
+    </header>
+    <article>
+        <h1>SON</h1>
+        <ol>
+            <li>
+                Putanu Alexandru
+            </li>
+            <li>
+                Tugui Stefan-Cristian
+            </li>
+        </ol>
+        <section>
+            <h2>Abstract</h2>
+            <p>
+                This page contains the following: Application architecture, Development stages and Task management
+            </p>
+        </section>
+        <section>
+            <h2>Application architecture</h2>
+            <h3>Goals</h3>
+            <p>
+                Our web solution provides a platform for social networking, this means our users will be able to collect profiles from social networking sites like: Instagram, Facebook, Github,..
+                The users' profiles can be searched by multiple criterias, ex: hobbies, geographical areas, name, etc..
+                Also, the network for each user will have the possibility to be exported in a 2D manner as PNG
+            </p>
+            <h3>Database</h3>
+            <figure typeof="sa:Image">
+                <img src="Database.png" alt="database-pic">
+                <figcaption> Database </figcaption>
+            </figure>
+            <p>
+                The database consists of 3 tables which atomical data.
+            </p>
+            <h3>Diagram</h3>
+            <figure typeof="sa:Image">
+                <img src="Architecture.png" alt="arch">
+                <figcaption> Architecture </figcaption>
+            </figure>
+            <p>
+                Our app is a single page type.
+                We say this because our goal is to develop an app which loads the user interface dinamically using HTML and CSS templates, managed by JavaScript
+                <h3>4. Application Scenarios</h3>
+                <figure typeof="sa:Image">
+                    <img src="Usecase.png" alt="usecase">
+                    <figcaption> Usecase Diagram </figcaption>
+                </figure>
+                <p>
+                    <ol>
+                        <li> 
+                            A new user makes an account, logs in and fills in his personal info and his own social networks profile links.
+                        </li>
+                        <li> 
+                            To extend his network, he may recieve a sugestion regarding the possible friends in our app found in another social network.
+                        </li>
+                        <li>
+                            He may modify his own network by:
+                            <ul>
+                                <li>Adding friends</li>
+                                <li>Deleting friends</li>
+                            </ul>
+                        </li>
+                        <li>
+                            The logged user can find other users based on criterias such as name, location, etc..
+                        </li>
+                        <li>
+                            Receive notifications about pending requests for connections. And accept/decline them.
+                        </li>
+                        <li> 
+                            Export his own network as .png file.
+                        </li>
+                    </ol>
+        </section>
+        <section>
+            <h2>Development stages</h2>
+            <p>
+                We will go through the following stages:
+            </p>
+            <ol>
+                <li>Establishing the overall look of the site along with the database, functionalities and task
+                    management;</li>
+                <li>Prototyping the main page and the templates</li>
+                <li>
+                    Start writing client and server
+                </li>
+                <li>
+                    Test the outcomes before each push
+                </li>
+                <li>Implementation of all the components and integration </li>
+            </ol>
+            <h3>
+                Storage methods
+            </h3>
+            <ul>
+                <li>
+                    For the code, we will be using Github.
+                </li>
+                <li>
+                    For the database we will be using MySQL API for node.js
+                </li>
+            </ul>
+        </section>
+    </article>
+</body>
+
+</html>
