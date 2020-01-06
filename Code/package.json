@@ -1,0 +1,20 @@
+{
+  "name": "son",
+  "version": "1.0.0",
+  "description": "Javascript Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Hello\"",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexandru2909/SON.git"
+  },
+  "author": "Cristi & Alex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alexandru2909/SON/issues"
+  },
+  "homepage": "https://github.com/Alexandru2909/SON#readme"
+}
