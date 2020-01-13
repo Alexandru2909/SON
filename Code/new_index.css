@@ -73,6 +73,7 @@ nav{
     height: 100%;
     margin: 0 auto;
     left: 0cm;
+    top:0cm;
 }
 
 nav>img{
@@ -104,6 +105,18 @@ nav>a{
 
 body{
     background-color: #f1f1f1;
+}
+
+.site_profile>*{
+    display: inline-flex;
+}
+
+.row-padding{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 #friends, #links{
