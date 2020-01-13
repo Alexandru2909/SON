@@ -70,17 +70,20 @@ nav>img{
     height: 100%;
     max-height: 30%;
 }
-nav{
-    margin-left: 5%;
-    margin: 5%;
+
+nav>h2{
+    color: #FCFCED;
+    text-align: center;
 }
 
-nav *{
-    color: #FCFCED;
+nav>a>h3:hover{
+    background-color: #FCFCED;
+    color: #262621;
 }
 
 nav>a{
-    color: black;
+    text-align: center;
+    color: #FCFCED;
     text-decoration: none;
 }
 
