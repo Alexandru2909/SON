@@ -21,7 +21,7 @@ function render(hashKey){
         case "#friends":
             pages[1].style.display = 'block';
             break;
-        case "#connect":
+        case "#links":
             pages[2].style.display = 'block';
             break;
         default:
