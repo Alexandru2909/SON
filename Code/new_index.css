@@ -1,3 +1,8 @@
+/* #262621 black
+   #72726E grey
+   #E5E5DE white
+   #FCFCED whiter*/
+
 .switch {
     position: relative;
     display: inline-block;
@@ -66,16 +71,32 @@ nav>img{
     max-height: 30%;
 }
 nav{
-    position: absolute;
-    width: 20%;
-    height: 100%;
-    margin: 0 auto;
-    left: 0cm;
+    margin-left: 5%;
+    margin: 5%;
 }
+
+nav *{
+    color: #FCFCED;
+}
+
 nav>a{
     color: black;
     text-decoration: none;
 }
-main{
-    margin-left: 20%;
+
+.nav_container{
+    position: absolute;
+    background-color: #262621;
+    width: 20%;
+    height: 100%;
+    /* margin: 0 auto; */
+    left: 0cm;
+}
+
+body{
+    background-color: #FCFCED;
+}
+
+#friends, #links{
+    display: none;
 }
