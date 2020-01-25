@@ -140,11 +140,12 @@ body{
     right: 0;
     bottom: 0;
     width: 300px;
-    height: 100px;
+    height: 20px;
 }
 .search_container .search {
     position: absolute;
-    margin: auto;
+    /* margin: auto; */
+    margin-left: 5%;
     top: 0;
     right: 0;
     bottom: 0;
@@ -164,6 +165,7 @@ body{
     content: "";
     position: absolute;
     margin: auto;
+    /* margin-left: 10px; */
     top: 11px;
     right: 0;
     bottom: 0;
@@ -178,6 +180,7 @@ body{
     content: "";
     position: absolute;
     margin: auto;
+    /* margin-left: 10px; */
     top: -5px;
     right: 0;
     bottom: 0;
@@ -191,14 +194,17 @@ body{
 .search_container input {
     /* font-family: 'Inconsolata', monospace; */
     position: absolute;
-    margin: auto;
+    /* margin: auto; */
+    margin-left: 5%;
+    margin-top: 1%;
+
     text-align: right;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     outline: none;
     border: none;
     background: #262621;
@@ -246,4 +252,94 @@ body{
     color: white;
     opacity: 0.5;
     font-weight: bolder;
+}
+
+.filter{
+    margin-right:16px!important
+}
+
+.filter-button{
+    font: 16px !important;
+    border:none;
+    display:inline-block;
+    padding:8px 16px;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap
+}
+
+button {
+    font-family: "Raleway", sans-serif;
+    font-size: 16px;
+}
+
+.search_filter{
+    display: inline-flex;
+    width: 100%;
+}
+
+.filter-select {
+    position: relative;
+    width: 20%;
+    padding-left: 2%;
+}
+
+.filter-select select{
+    display: none;
+}
+
+.select-selected{
+    background-color: green;
+}
+
+.select-selected:after{
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+}
+
+.select-selected.select-arrow-active:after{
+    border-color: transparent transparent #fff transparent;
+    top: 7px;
+}
+
+.select-items div, .select-selected {
+    color: #f1f1f1;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    user-select: none;
+}
+
+.select-items{
+    position: absolute;
+    background-color: #f1f1f1;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
+
+.select-hide{
+    display: none;
+}
+
+.select-items div:hover, .same-as-selected{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.white{
+    color:#000!important;
+    background-color:#fff!important
 }
