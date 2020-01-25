@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <%- include head %>
-    </head>
-    <%- include nav%>
-    <% if(page == 'friends'){ %>
-    <%- include body %>
-    <% } %>
-    <% if(page == 'acquaintances'){ %>
-    <%- include body_acq%>
-    <% } %>
-    <% if(page == 'links'){ %>
-    <%- include body_lin %>
-    <% } %>
-</html>
+<%- include ../partials/head %>
+<%- include ../partials/nav%>
+<% if(page == 'friends'){ %>
+<%- include ../partials/body_fri %>
+<% } %>
+<% if(page == 'acquaintances'){ %>
+<%- include ../partials/body_acq%>
+<% } %>
+<% if(page == 'links'){ %>
+<%- include ../partials/body_lin %>
+<% } %>
