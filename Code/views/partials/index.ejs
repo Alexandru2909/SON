@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include head %>
+    </head>
+    <%- include nav%>
+    <% if(page == 'friends'){ %>
+    <%- include body %>
+    <% } %>
+    <% if(page == 'acquaintances'){ %>
+    <%- include body_acq%>
+    <% } %>
+    <% if(page == 'links'){ %>
+    <%- include body_lin %>
+    <% } %>
+</html>
