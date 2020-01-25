@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Alexandru2909/SON#readme",
   "dependencies": {
     "ejs": "^1.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongodb": "^3.5.2"
   }
 }

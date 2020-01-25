@@ -1,47 +1,59 @@
-<main style="margin-left: 21%;">
-    <div class="page" id="links">
-        <header>
-            <span class="sidebar_icon" onclick="open_sidebar()"><i class="fa fa-bars"></i></span>
-            <div class="container">
-                <h1><b>Accounts</b></h1>
-            </div>
-        </header>
-        <div class="row-padding">
-            <div class="site_profile">
-                <img src="img/gmail.svg"">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="site_profile">
-                <img src="img/lastfm.svg"">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="site_profile">
-                <img src="img/linkedin.svg"">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="site_profile">
-                <img src="img/steam.svg"">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="site_profile">
-                <img src="img/twitter.svg"">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+
+    <div class="main" style="margin-left: 21%;">
+
+        <div class="page">
+            <header>
+                <span class="sidebar_icon" onclick="open_sidebar()"><i class="fa fa-bars"></i></span>
+                <div class="container">
+                    <h1><b>Accounts</b></h1>
+                </div>
+            </header>
+            <div class="row-padding">
+                <div class="site_profile">
+                    <img src="img/gmail.svg">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="site_profile">
+                    <img src="img/lastfm.svg">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="site_profile">
+                    <img src="img/linkedin.svg">
+                    <label class="switch">
+                        <input type="checkbox" name='linkedin' id="li" value='1'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="site_profile">
+                    <img src="img/steam.svg">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="site_profile">
+                    <img src="img/twitter.svg">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
         </div>
     </div>
-</main>
+</html>
+<script>
+    function connlinkedin(){
+        if(document.getElementById('li').checked){
+            window.location="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77htiwwawo0jau&redirect_uri=http://localhost:3000/&state=987654321&scope=r_basicprofile";
+            return false;
+        }
+        return true;
+    }
+</script>
