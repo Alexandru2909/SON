@@ -67,8 +67,6 @@
                     var y, i, k, s, h;
                     s = this.parentNode.parentNode.getElementsByTagName("select")[0];
                     h = this.parentNode.previousSibling;
-                    // console.log(h);
-                    // console.log(this);
                     for(i = 0; i<s.length; i++){
                         if(s.options[i].innerHTML == this.innerHTML) {
                             s.selectedIndex = i;
@@ -116,28 +114,18 @@
     }
 
     function resetFilter(){
-        var oldOptions, i;
-        // oldOptions = document.getElementsByClassName("same-as-selected");
-        // console.log(oldOptions);
-        // for(i = 0; i < oldOptions.length; i++){
-        //     oldOptions[i].removeAttribute("class");
-        // }
         select = document.getElementsByClassName("filter-select");
         for(i = 0; i < select.length; i++){
             b = select[i].getElementsByClassName("same-as-selected");
-            console.log(b);
-            // console.log(select[i].firstElementChild.options[select[i].firstElementChild.selectedIndex]);
             for(j = 1; j < b.length; j++)
                 b[j].removeAttribute("class");
-            select[i].firstElementChild.options[select[i].firstElementChild.selectedIndex].setAttribute("class", "");
-            console.log(select[i].firstElementChild.options[select[i].firstElementChild.selectedIndex]);
+            select[i].firstElementChild.options[select[i].firstElementChild.selectedIndex].removeAttribute("class");
             select[i].firstElementChild.options[0].setAttribute("class", "same-as-selected");
             select[i].firstElementChild.selectedIndex = 0;
             select[i].firstElementChild.value = 0;
-            // console.log(select[i]);
-            // console.log(select[i].firstElementChild.options[select[i].firstElementChild.selectedIndex]);
+            select[i].children[2].previousSibling.innerText = select[i].firstElementChild.options[0].text;
+
+
         }
-        b = select[1].getElementsByClassName("same-as-selected");
-        console.log(b);
     }
 </script>
