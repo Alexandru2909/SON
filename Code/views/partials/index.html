@@ -1,0 +1,94 @@
+<!-- 
+<% if(page == 'signup'){ %>
+<%- include ../partials/sign_up %>
+<% } else { %>
+<%- include ../partials/head %>
+<%- include ../partials/nav%>
+<% if(page == 'friends'){ %>
+<%- include ../partials/body_fri %>
+<% } %>
+<% if(page == 'acquaintances'){ %>
+<%- include ../partials/body_acq%>
+<% } %>
+<% if(page == 'links'){ %>
+<%- include ../partials/body_lin %>
+<% } %>
+<% } %> -->
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The SON</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Page created for the STAW project SON">
+        <link rel="stylesheet" type="text/css" href="/new_index.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="main.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <style>
+            body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+        </style>
+    </head>
+
+    <div id = "page">
+
+    </div>
+
+    <script>
+        function loadContent(){
+            const routes = {
+                '/'                     : "body_fri.ejs"
+                , '/friends'            : "body_fri.ejs"
+                , '/acquaintances'      : "body_acq.ejs"
+                , '/links'              : "body_lin.ejs"
+                , '/signup'             : "sign_up.ejs"
+            };
+
+        
+            const Utils = { 
+                // --------------------------------
+                //  Parse a url and break it into resource, id and verb
+                // --------------------------------
+                parseRequestURL : () => {
+                    
+                    let url = location.hash.slice(1).toLowerCase() || '/';
+                    let r = url.split("/")
+                    let request = {
+                        resource    : null,
+                        id          : null,
+                        verb        : null
+                    }
+                    request.resource    = r[1]
+                    request.id          = r[2]
+                    request.verb        = r[3]
+                    
+                    return request
+                }
+                
+                // --------------------------------
+                //  Simple sleep implementation
+                // --------------------------------
+                , sleep: (ms) => {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            }
+
+            content = null || document.getElementById('page');
+            let request = Utils.parseRequestURL();
+            let parsedURL = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '')
+            if(routes[parsedURL] in routes){
+                let page = routes[parsedURL];
+            } else {
+                let page = "body_acq.ejs";
+            }
+            console.log(parsedURL);
+
+            $("#page").load("./views/partials/body_fri.html");
+        }
+
+        window.addEventListener("hashchange", loadContent);
+        window.addEventListener("load", loadContent);
+    </script>
+
+</html>
