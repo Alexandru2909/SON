@@ -28,5 +28,11 @@ app.get('/friends', function(req, res) {
     });
 });
 
+app.get('/signup', function(req, res){
+    res.render('partials/index', {
+        page: 'signup'
+    });
+});
+
 app.listen(3000);
 console.log('listening to 3000...');
