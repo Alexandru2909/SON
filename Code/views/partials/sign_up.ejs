@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <title>The SON</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Page created for the STAW project SON">
+    <link rel="stylesheet" type="text/css" href="/signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="main.js"></script>
+    <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+    </style>
+</head>
+
+<body>
+    <form class="modal-content">
+        <div class="container">
+            <h1>Sign Up</h1>
+            <p>All field are compulsory for creating a new account.</p>
+            <hr>
+
+            <label for="fname"><b>First Name</b></label>
+            <input type='text' placeholder='Enter First Name' name = 'fname' required>
+
+            <label for="lname"><b>Last Name</b></label>
+            <input type='text' placeholder='Enter Last Name' name = 'lname' required>
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="email" required>
+
+            <label for="phone"><b>Phone number</b></label>
+            <input type="text" placeholder="Enter phone number" name="phone" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+            <button type="submit" onclick="location.href='index_loggedin.html'">Sign up</button>
+
+            <div class="container">
+                <a href='loacalhost:3000/login'" style="color:dodgerblue">I already have an account.</button>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
