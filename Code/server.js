@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 app.use(express.static(__dirname + '/views/public'));
 
 // set the view engine to ejs
@@ -9,7 +10,7 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
     res.render('partials/index',{
-        page: 'friends'
+        page: 'none'
     });
 });
 app.get('/links', function(req, res) {
@@ -32,6 +33,27 @@ app.get('/signup', function(req, res){
     res.render('partials/index', {
         page: 'signup'
     });
+});
+
+app.post('/getFriends', (req, res) => {
+    console.log(req.body);
+    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
+    console.log(cnt);
+	res.send({'response': cnt});
+});
+
+app.post('/getAcq', (req, res) => {
+    console.log(req.body);
+    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_acq.ejs','utf8'));
+    console.log(cnt);
+	res.send({'response': cnt});
+});
+
+app.post('/getLinks', (req, res) => {
+    console.log(req.body);
+    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
+    console.log(cnt);
+	res.send({'response': cnt});
 });
 
 app.listen(3000);
