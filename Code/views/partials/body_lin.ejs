@@ -1,5 +1,8 @@
 
     <div class="main" style="margin-left: 21%;">
+        <!-- <!-- <script type="text/javascript" src="lastfm.api.md5.js"></script> -->
+        <!-- <script type="text/javascript" src="lastfm.api.js"></script>
+        <script type="text/javascript" src="lastfm.api.cache.js"></script> -->
 
         <div class="page">
             <header>
@@ -19,7 +22,7 @@
                 <div class="site_profile">
                     <img src="img/lastfm.svg">
                     <label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" id = "lfm" onchange="connLastfm()">
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -49,11 +52,55 @@
     </div>
 </html>
 <script>
+    redirectProcess();
+
+    function redirectProcess(){
+        var url = window.location.href;
+        url = new URL(url);
+        var sn = url.searchParams.get("sn");
+        var token = url.searchParams.get("token");
+        if(sn){
+            $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: token}),
+                success: function(msg, status, jqXHR) {
+                    var response = msg;
+                    if(msg == "success"){
+                        window.location.href = "http://localhost:3000/friends";
+                    } else {
+                        email_alert.innerHTML = "Email already in use.";  
+                    }
+                }
+            });
+        }
+    }
+
     function connlinkedin(){
         if(document.getElementById('li').checked){
             window.location="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77htiwwawo0jau&redirect_uri=http://localhost:3000/&state=987654321&scope=r_basicprofile";
             return false;
         }
         return true;
+    }
+    function connLastfm(){
+        
+        // var lfm = new LastfmAPI({
+            //     'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
+            //     'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
+            // });
+            
+        if(document.getElementById("lfm").checked){
+            // var authUrl = lfm.getAuthenticationUrl({ 'cb' : 'http://localhost:3000/links' });
+            var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
+            window.location = authUrl;
+
+            // lfm.authenticate('THE_AUTHENTICATION_TOKEN', function (err, session) {
+            //     if (err) { throw err; }
+            //     console.log(session); // {"name": "LASTFM_USERNAME", "key": "THE_USER_SESSION_KEY"}
+            // });    
+        }
     }
 </script>
