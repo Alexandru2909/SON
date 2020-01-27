@@ -1,24 +1,16 @@
-var mongoCl = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+// const fs = require('fs');
+// var o = {"users":[{"email":'alex@yahoo.com',
+//         'fname':'Alex',
+//         'lname':'Putanu',
+//         'phone':'0723177494',
+//         'pass':'parola123',
+//         'acquaintances':[],
+//         'friends':[],
+//         'date':Date.now()}]};
+// let x = JSON.stringify(o);
+// fs.writeFile('database.json',x,(err)=>{
+//     if ( err) throw err;
+// });
+// console.log('data written.');
+// DATA CREATION ^^^^
 
-mongoCl.connect(url,function(err,db){
-    if (err) throw err;
-    console.log("Database created!");
-    var dbo = db.db("SONdb");
-    dbo.createCollection("logins",function(err,res){
-        if(err) throw err;
-        console.log("I created the Son database");
-        db.close();
-    })
-});
-
-mongoCl.connect(url,function(err,db){
-    if (err) throw err;
-    console.log("Database created!");
-    var dbo = db.db("SONdb");
-    dbo.createCollection("logins",function(err,res){
-        if(err) throw err;
-        console.log("I created the Son database");
-        db.close();
-    })
-});

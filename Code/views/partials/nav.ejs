@@ -11,6 +11,19 @@
         <h3>Linked accounts</h3>
     </button>
     <script>
+        // TEST
+        $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func:'sugimio',message: 'Give me friends of friends:('}),
+                success: (data) => {
+                    $(".main").replaceWith(data.response);
+                }
+            });
+
+
         function getFriends() {
             $.ajax({
                 url: '/getFriends',

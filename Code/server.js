@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
+let jsonData = require('./database.json');
+var tools = require('./main.js');
+
 app.use(express.static(__dirname + '/views/public'));
 
 // set the view engine to ejs
@@ -35,6 +38,9 @@ app.get('/signup', function(req, res){
     });
 });
 
+//to parse arguments coming from json
+app.use(express.json());
+
 app.post('/getFriends', (req, res) => {
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
 	res.send({'response': cnt});
@@ -49,6 +55,20 @@ app.post('/getLinks', (req, res) => {
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
 	res.send({'response': cnt});
 });
+
+app.post('/functions',(req,res) => {
+    console.log('Processing ' + req.body.func + '...');
+    switch(req.body.func){
+        case 'addUserToDB':
+            let ret = tools.adduser(jsonData,req.body.email,req.body.fname,req.body.lname,req.body.phone,req.body.psw);
+            res.send(ret);
+            if (ret == true){
+                fs.writeFile('database.json',x,(err)=>{
+                    if ( err) throw err;
+                });
+            }
+    }
+})
 
 app.listen(3000);
 console.log('listening to 3000...');
