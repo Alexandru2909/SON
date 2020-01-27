@@ -12,7 +12,6 @@
     </button>
     <script>
         function getFriends() {
-            console.log('Button clicked! Running ajax...');
             $.ajax({
                 url: '/getFriends',
                 type: 'POST',
@@ -20,14 +19,12 @@
                 dataType: 'json',
                 data: JSON.stringify({message: 'Give me friends :('}),
                 success: (data) => {
-                    console.log(data.response);
                     $(".main").replaceWith(data.response);
                 }
             });
             window.history.pushState("object or string","Page Title","/friends");
         }
         function getAcquaintances() {
-            console.log('Button clicked! Running ajax...');
             $.ajax({
                 url: '/getAcq',
                 type: 'POST',
@@ -35,14 +32,12 @@
                 dataType: 'json',
                 data: JSON.stringify({message: 'Give me friends of friends:('}),
                 success: (data) => {
-                    console.log(data.response);
                     $(".main").replaceWith(data.response);
                 }
             });
             window.history.pushState("object or string","Page Title","/acquaintances");
         }
         function getLinks() {
-            console.log('Button clicked! Running ajax...');
             $.ajax({
                 url: '/getLinks',
                 type: 'POST',
@@ -50,7 +45,6 @@
                 dataType: 'json',
                 data: JSON.stringify({message: 'Give me links :('}),
                 success: (data) => {
-                    console.log(data.response);
                     $(".main").replaceWith(data.response);
                 }
             });
@@ -58,5 +52,3 @@
         }
         </script>
 </nav>
-<div class="main">
-</div>

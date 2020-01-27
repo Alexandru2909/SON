@@ -87,20 +87,23 @@ nav>h2{
     text-align: center;
 }
 
-nav>a>h3{
+nav>button>h3{
     margin: 0px;
     padding: 5%;
 }
 
-nav>a>h3:hover{
+nav>button>h3:hover{
     background-color: #f1f1f1;
     color: #262621;
 }
 
-nav>a{
+nav>button{
+    width: 100%;
     text-align: center;
     color: #f1f1f1;
     text-decoration: none;
+    border: none;
+    background-color: #262621;
 }
 
 body{
