@@ -6,6 +6,8 @@ var lfm = new LastfmAPI({
 	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
 	'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
 });
+let jsonData = require('./database.json');
+var tools = require('./main.js');
 
 app.use(express.static(__dirname + '/views/public'));
 
@@ -39,6 +41,9 @@ app.get('/signup', function(req, res){
     res.render('partials/sign_up');
 });
 
+//to parse arguments coming from json
+app.use(express.json());
+
 app.post('/getFriends', (req, res) => {
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
 	res.send({'response': cnt});
@@ -53,6 +58,20 @@ app.post('/getLinks', (req, res) => {
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
 	res.send({'response': cnt});
 });
+
+app.post('/functions',(req,res) => {
+    console.log('Processing ' + req.body.func + '...');
+    switch(req.body.func){
+        case 'addUserToDB':
+            let ret = tools.adduser(jsonData,req.body.email,req.body.fname,req.body.lname,req.body.phone,req.body.psw);
+            res.send(ret);
+            if (ret == true){
+                fs.writeFile('database.json',x,(err)=>{
+                    if ( err) throw err;
+                });
+            }
+    }
+})
 
 app.listen(3000);
 console.log('listening to 3000...');
