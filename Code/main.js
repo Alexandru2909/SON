@@ -1,7 +1,7 @@
 module.exports = {
     adduser:function(initialObj,fname,lname,email,phone,psw){
-        for ( var user in jsonData.users){
-            if(user.email === email)
+        for ( var user in initialObj.users){
+            if(initialObj.users[user].email === email)
                 return false;
         }
         let obj = {"email":email,
@@ -15,5 +15,22 @@ module.exports = {
         console.log(initialObj);
         initialObj.users.push(obj);
         return true;
+    },
+    checkUser:function(initialObj,email,pass){
+        for ( var user in initialObj.users){
+            if(initialObj.users[user].email === email){
+                if(initialObj.users[user].pass === pass)
+                    return true;
+                else
+                    return false;
+            }
+        }
+    },
+    checkAuth:function(req,res,next){
+        if(!req.session.email){
+            res.redirect('/signup');
+        } else { 
+            next();
+        }
     }
 };

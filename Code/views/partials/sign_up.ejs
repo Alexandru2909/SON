@@ -7,7 +7,8 @@
     <meta name="description" content="Page created for the STAW project SON">
     <link rel="stylesheet" type="text/css" href="/signup.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
     <style>
         body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </style>
@@ -45,7 +46,7 @@
             <button onclick="addUserToDB()">Sign up</button>
 
             <div class="container">
-                <a href='/friends'" style="color:dodgerblue">I already have an account.</button>
+                <a href='/login'" style="color:dodgerblue">I already have an account.</button>
             </div>
         </div>
     </div>
@@ -63,18 +64,16 @@
         var email_alert = document.getElementById('email-alert');
         
         if(psw.localeCompare(psw_repeat) == 0){
-            var text = '{ email : "' + email + '", fname : "' + fname + '", lname : "' + lname + '", phone : "' + phone + '", pass : "' + psw + "}";
-            var json = JSON.parse(text);
-
+            var json = {'func': 'adduserToDB','email': email,'fname':fname,'lname':lname,'phone':phone,'pass':psw};
             $.ajax({
                 url: '/functions',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
-                data: JSON.stringify({func: 'adduserToDB', message: json}),
+                data: JSON.stringify(json),
                 success: function(msg, status, jqXHR) {
                     var response = msg;
-                    if(msg == "success"){
+                    if(msg == true){
                         window.location.href = "http://localhost:3000/friends";
                     } else {
                         email_alert.innerHTML = "Email already in use.";  
