@@ -33,9 +33,7 @@ app.get('/friends', function(req, res) {
 });
 
 app.get('/signup', function(req, res){
-    res.render('partials/index', {
-        page: 'signup'
-    });
+    res.render('partials/sign_up');
 });
 
 //to parse arguments coming from json
