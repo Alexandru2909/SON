@@ -52,7 +52,7 @@
     </div>
 </html>
 <script>
-    redirectProcess();
+    // redirectProcess();
 
     function redirectProcess(){
         var url = window.location.href;
@@ -66,14 +66,6 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: token}),
-                success: function(msg, status, jqXHR) {
-                    var response = msg;
-                    if(msg == "success"){
-                        window.location.href = "http://localhost:3000/friends";
-                    } else {
-                        email_alert.innerHTML = "Email already in use.";  
-                    }
-                }
             });
         }
     }

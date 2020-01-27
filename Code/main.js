@@ -11,6 +11,7 @@ module.exports = {
                 'pass':psw,
                 'acquaintances':[],
                 'friends':[],
+                'lastfm': "false",
                 'date':Date.now()};
         console.log(initialObj);
         initialObj.users.push(obj);

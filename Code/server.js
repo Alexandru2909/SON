@@ -86,6 +86,14 @@ app.post('/functions',(req,res) => {
             }
             res.send(ret);
             break;
+        case 'toggleLink':
+            var ret = tools.toggleLink(jsonData, req.body.sn, req.body.user_token);
+            if(ret == true){
+                req.session.lastfm_toggle = "true";
+                req.session.lastfm_token = req.body.user_token;
+            }
+            res.send(ret);
+            break;
         default:
             console.log('nothing');
     }
