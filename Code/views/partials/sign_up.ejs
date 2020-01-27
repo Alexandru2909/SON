@@ -14,39 +14,79 @@
 </head>
 
 <body>
-    <form class="modal-content">
+    <div class="modal-content">
         <div class="container">
             <h1>Sign Up</h1>
             <p>All field are compulsory for creating a new account.</p>
             <hr>
 
             <label for="fname"><b>First Name</b></label>
-            <input type='text' placeholder='Enter First Name' name = 'fname' required>
+            <input type='text' placeholder='Enter First Name' name = 'fname' id = 'fname' >
 
             <label for="lname"><b>Last Name</b></label>
-            <input type='text' placeholder='Enter Last Name' name = 'lname' required>
+            <input type='text' placeholder='Enter Last Name' name = 'lname' id = 'lname' >
 
             <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required>
+            <p id = 'email-alert' style="color: red; font-size: 12px; font-weight: 0;"></p>
+            <input type="text" placeholder="Enter Email" name="email" id = 'email' >
 
             <label for="phone"><b>Phone number</b></label>
-            <input type="text" placeholder="Enter phone number" name="phone" required>
+            <input type="text" placeholder="Enter phone number" name="phone" id = 'phone' >
 
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <input type="password" placeholder="Enter Password" name="psw" id = 'psw' >
 
             <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+            <p id = 'psw-alert' style="color: red; font-size: 12px; font-weight: 0;"></p>
+            <input type="password" placeholder="Repeat Password" name="psw-repeat" id = 'psw-repeat' >
 
             <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
-            <button type="submit" onclick="location.href='index_loggedin.html'">Sign up</button>
+            <button onclick="addUserToDB()">Sign up</button>
 
             <div class="container">
-                <a href='loacalhost:3000/login'" style="color:dodgerblue">I already have an account.</button>
+                <a href='/friends'" style="color:dodgerblue">I already have an account.</button>
             </div>
         </div>
-    </form>
+    </div>
 </body>
+
+<script>
+    function addUserToDB(){
+        var fname = document.getElementById('fname').value;
+        var lname = document.getElementById('lname').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone').value;
+        var psw = document.getElementById('psw').value;
+        var psw_repeat = document.getElementById('psw-repeat').value;
+        var psw_alert = document.getElementById('psw-alert');
+        var email_alert = document.getElementById('email-alert');
+        
+        if(psw.localeCompare(psw_repeat) == 0){
+            var text = '{ email : "' + email + '", fname : "' + fname + '", lname : "' + lname + '", phone : "' + phone + '", pass : "' + psw + "}";
+            var json = JSON.parse(text);
+
+            $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func: 'adduserToDB', message: json}),
+                success: function(msg, status, jqXHR) {
+                    var response = msg;
+                    if(msg == "success"){
+                        window.location.href = "http://localhost:3000/friends";
+                    } else {
+                        email_alert.innerHTML = "Email already in use.";  
+                    }
+                }
+            });
+        } else {
+            alert.innerHTML = "Passwords do not match.";
+        }
+
+
+    }
+</script>
 
 </html>
