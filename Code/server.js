@@ -2,6 +2,11 @@ var express = require('express');
 var app = express();
 var session = require('express-session')
 var fs = require('fs');
+var LastfmAPI = require("lastfmapi");
+var lfm = new LastfmAPI({
+	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
+	'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
+});
 let jsonData = require('./database.json');
 var tools = require('./main.js');
 
