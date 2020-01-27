@@ -36,23 +36,17 @@ app.get('/signup', function(req, res){
 });
 
 app.post('/getFriends', (req, res) => {
-    console.log(req.body);
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
-    console.log(cnt);
 	res.send({'response': cnt});
 });
 
 app.post('/getAcq', (req, res) => {
-    console.log(req.body);
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_acq.ejs','utf8'));
-    console.log(cnt);
 	res.send({'response': cnt});
 });
 
 app.post('/getLinks', (req, res) => {
-    console.log(req.body);
     var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
-    console.log(cnt);
 	res.send({'response': cnt});
 });
 
