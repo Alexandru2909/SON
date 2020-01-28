@@ -23,17 +23,17 @@ app.get('/',tools.checkAuth, function(req, res) {
     });
 });
 app.get('/links',tools.checkAuth, function(req, res) {
-    res.render('partials/links',{
+    res.render('partials/index',{
         page: 'links'
     });
 });
 app.get('/acquaintances',tools.checkAuth, function(req, res) {
-    res.render('partials/acquaintances',{
+    res.render('partials/index',{
         page: 'acquaintances'
     });
 });
 app.get('/friends',tools.checkAuth, function(req, res) {
-    res.render('partials/friends',{
+    res.render('partials/index',{
         page: 'friends'
     });
 });
