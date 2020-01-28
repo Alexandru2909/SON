@@ -26,6 +26,7 @@ module.exports = {
                     return false;
             }
         }
+        return false;
     },
     checkAuth:function(req,res,next){
         if(!req.session.email){
