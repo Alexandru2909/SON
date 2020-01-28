@@ -33,5 +33,18 @@ module.exports = {
         } else { 
             next();
         }
+    },
+    toggleLink:function(jsonData, user_email, sn, user_token){
+        for(var user in jsonData){
+            if((jsonData.users[user].email == user_email)){
+                jsonData.users[user].lastfm = "true";
+                break;
+            }
+        }
+
+        fs.writeFile('database.json',jsonData,(err)=>{
+            if ( err) throw err;
+        });
+        console.log("am scris");
     }
 };
