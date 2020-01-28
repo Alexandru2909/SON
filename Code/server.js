@@ -56,9 +56,9 @@ app.use(express.json());
 
 app.post('/functions',(req,res) => {
     console.log('Processing ' + req.body.func + '...');
-    console.log(jsonData);
+    // console.log(jsonData);
     switch(req.body.func){
-        case 'getFriends':
+        case 'getFriends1':
             var list = tools.getFriends(jsonData, req.session.email, req.body.network);
             res.send({'response': list});
             break;

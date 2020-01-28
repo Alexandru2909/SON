@@ -31,33 +31,31 @@
             </div>
         </header>
         <div class="row-padding" id="flist">
-
         </div>
     </div>
-
-
 </html>
 
 <script>
     customSelect("filter-select age");
     customSelect("filter-select city");
-
+    getFriendsList();
     function getFriendsList(){
-        for ( var net in ['lastfm','twitter']){
+        networks = ['lastfm'];
+        for ( var net in networks){
             $.ajax({
                 url: '/functions',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
-                data: JSON.stringify({funct: 'getFriends',network: net}),
+                data: JSON.stringify({func: 'getFriends1',network: networks[net]}),
                 success: (data) => {
                     for(user in data.response){
                         fetch('http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=' + user + '&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json')
                         .then(response => response.json())
                         .then(data => {
-                            var node = document.createElement("div");
-                            node.innerHTML = "<div class='user_info'><img alt='Profile pic' src='" + data.image + '><p><b>Name:' + data.name + '</b></p><p>Real name:'+ data.realname+' </p><p>Country:'+data.country+ '</p><p>Age:'+data.age+'</p></div>';
-                            document.getElementById("flist").appendChild(node);
+                            var node = `<div class='user_profile'><img alt='Profile pic' src=${data.image}><p><b>Name:${data.name}</b></p><p>Real name:${data.realname} </p><p>Country:${data.country}</p><p>Age:${data.age}</p></div>`;
+                            console.log(node);
+                            $('#flist').append(node);
                         })
                         .catch(err => {
                     console.error('Fetch error:', err);
