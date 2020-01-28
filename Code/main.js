@@ -1,3 +1,5 @@
+fs = require("fs");
+
 module.exports = {
     adduser:function(initialObj,fname,lname,email,phone,psw){
         for ( var user in initialObj.users){
@@ -46,15 +48,16 @@ module.exports = {
             next();
         }
     },
-    toggleLink:function(jsonData, user_email, sn, user_token){
-        for(var user in jsonData){
+    toggleLink:function(jsonData, user_email, sn, user_id){
+        console.log("__________");
+        for(var user in jsonData.users){
             if((jsonData.users[user].email == user_email)){
-                jsonData.users[user].lastfm = "true";
+                jsonData.users[user].lastfm_id = user_id;
                 break;
             }
         }
 
-        fs.writeFile('database.json',jsonData,(err)=>{
+        fs.writeFile('database.json', JSON.stringify(jsonData),(err)=>{
             if (err) throw err;
         });
         console.log("am scris");
@@ -76,7 +79,7 @@ module.exports = {
             }
         }
 
-        fs.writeFile('database.json', jsonData, (err)=>{
+        fs.writeFile('database.json', JSON.stringify(jsonData), (err)=>{
             if (err) throw err;
         })
     },
@@ -106,7 +109,7 @@ module.exports = {
                     break;
                 }
             }
-            fs.writeFile('database.json', jsonData, (err)=>{
+            fs.writeFile('database.json', JSON.stringify(jsonData), (err)=>{
                 if (err) throw err;
             })
         }
@@ -135,7 +138,7 @@ module.exports = {
                     break;
                 }
             }
-            fs.writeFile('database.json', jsonData, (err)=>{
+            fs.writeFile('database.json', JSON.stringify(jsonData), (err)=>{
                 if (err) throw err;
             })
         }

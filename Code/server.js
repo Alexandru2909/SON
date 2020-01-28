@@ -92,12 +92,26 @@ app.post('/functions',(req,res) => {
             }
             res.send(ret);
             break;
-        case 'toggleLink':
-            var ret = tools.toggleLink(jsonData, req.session.email, req.body.sn, req.body.user_token);
-            if(ret == true){
-                req.session.lastfm_toggle = true;
-                req.session.lastfm_token = req.body.user_token;
-            }
+        case 'toggleLink':     
+            let user_id = 0;   
+            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");    
+            lfm.user.getInfo({}, 
+                function (err, user_info){
+                    if(err){
+                        console.log("eroare");
+                        throw err;
+                    }
+                    console.log("hatz");
+                    console.log(user_info);
+                    user_id = user_info.id;
+                }
+                );
+            var ret = tools.toggleLink(jsonData, req.session.email, req.body.sn, user_id);
+            console.log("c'est fini");
+            // if(ret == true){
+            //     req.session.lastfm_toggle = true;
+            //     req.session.lastfm_token = req.body.user_token;
+            // }
             res.send(ret);
             break;
         case 'upgradeLinks':
