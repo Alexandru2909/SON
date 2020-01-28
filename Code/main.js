@@ -11,7 +11,7 @@ module.exports = {
                 'pass':psw,
                 'acquaintances':[],
                 'friends':[],
-                'lastfm': "false",
+                'lastfm_id': "0",
                 'date':Date.now()};
         console.log(initialObj);
         initialObj.users.push(obj);
@@ -44,8 +44,29 @@ module.exports = {
         }
 
         fs.writeFile('database.json',jsonData,(err)=>{
-            if ( err) throw err;
+            if (err) throw err;
         });
         console.log("am scris");
+    },
+    addAcq:function(jsonData, addToEmail, acqID, sn){
+        let found = false;
+        for(var user in jsonData){
+            if (jsonData.users[user].email == addToEmail){
+                for(var acq in jsonData.users[user].acquaintances){
+                    if (acq.sn == sn){
+                        acq.friends = acq.friends.push((acqID, Date.now()));
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if(found == true){
+                break;
+            }
+        }
+
+        fs.writeFile('database.json', jsonData, (err)=>{
+            if (err) throw err;
+        })
     }
 };

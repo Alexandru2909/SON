@@ -101,6 +101,33 @@ app.post('/functions',(req,res) => {
             if(req.session.twitter_toggle == true)
                 listOfSN.push("twitter");
             res.send(listOfSN);
+        case 'getAcq':
+            var username = "";
+            lfm.user.getInfo({}, 
+                function (err, user_info){
+                    if(err){
+                        throw err;
+                    }
+                    username = user_info.name;
+                }
+                )
+            lfm.user.getFriends({
+                'user': username
+            }, function(err, friends){
+                if(err){
+                    throw err;
+                }
+                let users_list = [];
+                for(var user in jsonData.users){
+                    users_list.push(jsonData.users[user].lastfm_id);
+                }
+                for(var user in friends.friends){
+                    if(users_list.includes(friends.friends[user].id)){
+                        if(!tools.isFriend(jsonData, req.session.email, friends.friends[user].id, "lastfm"))
+                        tools.addAcq(jsonData, req.session.email, friends.friends[user].id, "lastfm");
+                    }
+                }
+            });
         default:
             console.log('nothing');
     }
