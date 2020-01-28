@@ -118,8 +118,9 @@ body{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
+    align-content: space-around;
 }
 
 #friends, #links{
@@ -349,4 +350,16 @@ button {
 .white{
     color:#262621!important;
     background-color:#fff!important
+}
+
+.user_profile{
+    padding: 1.5%;
+    padding-bottom: 0%;
+    background-color: #262621;
+    color: #f1f1f1;
+    border-radius: 8%;
+    margin: 0.5%;
+}
+.user_profile>a{
+    color: #f1f1f1;
 }
