@@ -7,6 +7,11 @@ var lfm = new LastfmAPI({
 	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
 	'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
 });
+var Twitter = require("twitter");
+var clientTwitter = new Twitter({
+    "consumer_key" : "",
+    "consumer_secret" : ""
+});
 let jsonData = require('./database.json');
 var tools = require('./main.js');
 
@@ -128,6 +133,40 @@ app.post('/functions',(req,res) => {
                     }
                 }
             });
+
+        case 'getFriends':
+            var username = "";
+            lfm.user.getInfo({}, 
+                function (err, user_info){
+                    if(err){
+                        throw err;
+                    }
+                    username = user_info.name;
+                }
+            );
+            
+            lfm.user.getFriends({
+                'user':username
+            }, function(err, friends){
+                if(err){
+                    throw err;
+                }
+                for(var user in friends.friends){
+                    tools.addFriend(jsonData, req.session.email, friends.friends[user].id, "lastfm");
+                }
+            });
+
+            clientTwitter.get('friends/list', function(err, data){
+                if(err){
+                    throw err;
+                }
+
+                for(var user in data.users){
+                    tools.addFriend(jsonData, req.session.email, data.users[user].id, "twitter");
+                }
+            });
+
+            break;
         default:
             console.log('nothing');
     }

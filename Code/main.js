@@ -68,5 +68,65 @@ module.exports = {
         fs.writeFile('database.json', jsonData, (err)=>{
             if (err) throw err;
         })
+    },
+    addFriend:function(jsonData, addToEmail, acqID, sn){
+        let found = false;
+        if(sn == "lastfm"){
+            for(var user in jsonData.users){
+                if(jsonData.users[user].email == addToEmail){
+                    for(var friend in jsonData.users){
+                        if(jsonData.users[friend].lastfm_id == acqID){
+                            for(var sn in jsonData.users[user].friends){
+                                if(jsonData.users[user].friends.sn == "lastfm"){
+                                    if(!jsonData.users[user].friends.friends.includes(jsonData.users[friend].email)){
+                                        jsonData.users[user].friends.friends = jsonData.users[user].friends.friends.push(jsonData.users[friend].email);
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(found == true){
+                            break;
+                        }
+                    }
+                }
+                if(found == true){
+                    break;
+                }
+            }
+            fs.writeFile('database.json', jsonData, (err)=>{
+                if (err) throw err;
+            })
+        }
+
+        if(sn == "twitter"){
+            for(var user in jsonData.users){
+                if(jsonData.users[user].email == addToEmail){
+                    for(var friend in jsonData.users){
+                        if(jsonData.users[friend].twitter_id == acqID){
+                            for(var sn in jsonData.users[user].friends){
+                                if(jsonData.users[user].friends.sn == "twitter"){
+                                    if(!jsonData.users[user].friends.friends.includes(jsonData.users[friend].email)){
+                                        jsonData.users[user].friends.friends = jsonData.users[user].friends.friends.push(jsonData.users[friend].email);
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(found == true){
+                            break;
+                        }
+                    }
+                }
+                if(found == true){
+                    break;
+                }
+            }
+            fs.writeFile('database.json', jsonData, (err)=>{
+                if (err) throw err;
+            })
+        }
     }
 };
