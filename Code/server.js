@@ -49,25 +49,26 @@ app.get('/login', function(req, res){
 //to parse arguments coming from json
 app.use(express.json());
 
-app.post('/getFriends', (req, res) => {
-    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
-	res.send({'response': cnt});
-});
-
-app.post('/getAcq', (req, res) => {
-    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_acq.ejs','utf8'));
-	res.send({'response': cnt});
-});
-
-app.post('/getLinks', (req, res) => {
-    var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
-	res.send({'response': cnt});
-});
-
 app.post('/functions',(req,res) => {
     console.log('Processing ' + req.body.func + '...');
     console.log(jsonData);
     switch(req.body.func){
+        case 'getFriends':
+            var list = tools.getFriends(jsonData, req.session.email, req.body.network);
+            res.send({'response': list});
+            break;
+        case 'getFriendsBody':
+            var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
+            res.send({'response': cnt});
+            break;
+        case 'getAcqBody':
+            var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_acq.ejs','utf8'));
+            res.send({'response': cnt});
+            break;
+        case 'getLinksBody':
+            var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
+            res.send({'response': cnt});
+            break;
         case 'adduserToDB':
             var ret = tools.adduser(jsonData,req.body.fname,req.body.lname,req.body.email,req.body.phone,req.body.pass);
             if (ret == true){

@@ -17,6 +17,17 @@ module.exports = {
         initialObj.users.push(obj);
         return true;
     },
+    getFriends:function(initialObj,email,network){
+        for ( var user in initialObj.users){
+            if(initialObj.users[user].email === email){
+                for ( var net in initialObj.users[user].friends ){
+                    if(initialObj.users[user].friends[net].sn === network)
+                        return initialObj.users[user].friends[net].friends;
+                }
+            }
+        }
+        return null;
+    },
     checkUser:function(initialObj,email,pass){
         for ( var user in initialObj.users){
             if(initialObj.users[user].email === email){

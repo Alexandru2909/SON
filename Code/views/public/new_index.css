@@ -114,6 +114,14 @@ body{
     display: inline-flex;
 }
 
+.row-padding#logos{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
 .row-padding{
     display: flex;
     flex-direction: row;

@@ -30,14 +30,8 @@
                 </div>
             </div>
         </header>
-        <div class="row-padding">
-            <div class="user_profile">
-                <img src = "" style="width:100%">
-                <div class="user_info">
-                    <p><b>Name</b></p>
-                    <p>Info</p>
-                </div>
-            </div>
+        <div class="row-padding" id="flist">
+
         </div>
     </div>
 
@@ -47,6 +41,33 @@
 <script>
     customSelect("filter-select age");
     customSelect("filter-select city");
+
+    function getFriendsList(){
+        for ( var net in ['lastfm','twitter']){
+            $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({funct: 'getFriends',network: net}),
+                success: (data) => {
+                    for(user in data.response){
+                        fetch('http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=' + user + '&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json')
+                        .then(response => response.json())
+                        .then(data => {
+                            var node = document.createElement("div");
+                            node.innerHTML = "<div class='user_info'><img alt='Profile pic' src='" + data.image + '><p><b>Name:' + data.name + '</b></p><p>Real name:'+ data.realname+' </p><p>Country:'+data.country+ '</p><p>Age:'+data.age+'</p></div>';
+                            document.getElementById("flist").appendChild(node);
+                        })
+                        .catch(err => {
+                    console.error('Fetch error:', err);
+                        });
+                    }
+                }
+            });
+        }
+    }
+
     function customSelect(selectClassName){
         var select, i, j, setElement, selectedItem, optionList, option;
         select = document.getElementsByClassName(selectClassName)

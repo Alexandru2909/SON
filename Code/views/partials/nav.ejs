@@ -13,11 +13,11 @@
     <script>
         function getFriends() {
             $.ajax({
-                url: '/getFriends',
+                url: '/functions',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
-                data: JSON.stringify({message: 'Give me friends :('}),
+                data: JSON.stringify({func: 'getFriendsBody'}),
                 success: (data) => {
                     $(".main").replaceWith(data.response);
                 }
@@ -26,11 +26,11 @@
         }
         function getAcquaintances() {
             $.ajax({
-                url: '/getAcq',
+                url: '/functions',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
-                data: JSON.stringify({message: 'Give me friends of friends:('}),
+                data: JSON.stringify({func: 'getAcqBody'}),
                 success: (data) => {
                     $(".main").replaceWith(data.response);
                 }
@@ -39,11 +39,11 @@
         }
         function getLinks() {
             $.ajax({
-                url: '/getLinks',
+                url: '/functions',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
-                data: JSON.stringify({message: 'Give me links :('}),
+                data: JSON.stringify({func: 'getLinksBody'}),
                 success: (data) => {
                     $(".main").replaceWith(data.response);
                 }
