@@ -23,17 +23,17 @@ app.get('/',tools.checkAuth, function(req, res) {
     });
 });
 app.get('/links',tools.checkAuth, function(req, res) {
-    res.render('partials/index',{
+    res.render('partials/links',{
         page: 'links'
     });
 });
 app.get('/acquaintances',tools.checkAuth, function(req, res) {
-    res.render('partials/index',{
+    res.render('partials/acquaintances',{
         page: 'acquaintances'
     });
 });
 app.get('/friends',tools.checkAuth, function(req, res) {
-    res.render('partials/index',{
+    res.render('partials/friends',{
         page: 'friends'
     });
 });
@@ -69,7 +69,7 @@ app.post('/functions',(req,res) => {
     console.log(jsonData);
     switch(req.body.func){
         case 'adduserToDB':
-            var ret = tools.adduser(jsonData,req.body.email,req.body.fname,req.body.lname,req.body.phone,req.body.pass);
+            var ret = tools.adduser(jsonData,req.body.fname,req.body.lname,req.body.email,req.body.phone,req.body.pass);
             if (ret == true){
                 req.session.email = req.body.email;
                 let x = JSON.stringify(jsonData);
