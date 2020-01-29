@@ -110,6 +110,7 @@
             checkbox.checked = false;
             console.log("Nope");
         } else{
+            console.log('hi');
             if(checkbox.checked){
                 $.ajax({
                     url: '/functions',
@@ -118,14 +119,15 @@
                     dataType: 'json',
                     data: JSON.stringify({func:'insertLFMuser',user:lastfmName.value}),
                     success: (data) => {
+                        console.log('data');
                         if (data==true)
                             console.log("username inserted for LASTFM");
                         else
                             console.log("username failed for LASTFM");
+                        var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
+                        window.location = authUrl;
                     }
                 });
-                var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
-                window.location = authUrl;
             }
         }
     }

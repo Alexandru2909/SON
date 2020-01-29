@@ -100,7 +100,10 @@ app.post('/functions',(req,res) => {
             var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
             req.session.lastfm_user = req.body.user;
             res.send(ret);
-            //TODO WRITE DOWN
+            let x = JSON.stringify(jsonData);
+            fs.writeFile('database.json',x,(err)=>{
+                if ( err) throw err;
+            });
             break;
         case 'toggleLink':     
             req.session.lastfm_toggle = true;
