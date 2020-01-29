@@ -15,7 +15,11 @@ module.exports = {
                 'friends':[],
                 'lastfm_id':'0',
                 'lastfm_username': "",
+                'twitter_id': "",
                 'vk_username':'',
+                'lastfm_linked': false,
+                'twitter_linked': false,
+                'vk_linked' : false,
                 'date':Date.now()};
         console.log(initialObj);
         initialObj.users.push(obj);
