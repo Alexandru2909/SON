@@ -13,14 +13,6 @@
             </header>
             <div class="row-padding" id='logos'>
                 <div class="site_profile">
-                    <img src="img/gmail.svg">
-                    <input type="text" id='gmail_username' placeholder="Enter username">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="site_profile">
                     <img src="img/lastfm.svg">
                     <input type="text" id='lastfm_username' placeholder="Enter username">
                     <label class="switch">
@@ -32,13 +24,13 @@
                     <img src="img/linkedin.svg">
                     <input type="text" id='linkedin_username' placeholder="Enter username">
                     <label class="switch">
-                        <input type="checkbox" name='linkedin' id="li" value='1'>
+                        <input type="checkbox" name='linkedin' id="li" value='1' onchange="connlinkedin()">
                         <span class="slider round"></span>
                     </label>
                 </div>
                 <div class="site_profile">
-                    <img src="img/steam.svg">
-                    <input type="text" id='steam_username' placeholder="Enter username">
+                    <img src="img/vk.svg">
+                    <input type="text" id='vk_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox" id="VK" onchange="connVK();">
                         <span class="slider round"></span>
@@ -108,16 +100,16 @@
                 });
                 break;
             case 'vk':
-            var hashes = location.hash.split('&');
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'addVKToken', token: hashes[0].split('=')[1], user_id: hashes[2].split('=')[1]}),
-                success: (data) => {
-                }
-            });
+                var hashes = location.hash.split('&');
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func: 'addVKToken', token: hashes[0].split('=')[1], user_id: hashes[2].split('=')[1]}),
+                    success: (data) => {
+                    }
+                });
                 break;
         }
     }
@@ -133,7 +125,6 @@
                     for(sn in msg.list){
                         console.log(msg.list[sn]);
                         if(msg.list[sn] == "lastfm"){
-                            console.log("in gere");
                             var lastfm_checkbox = document.getElementById('lfm');
                             lastfm_checkbox.checked = true;
                         }
@@ -141,21 +132,45 @@
                             var twitter_checkbox = document.getElementById("twitter");
                             twitter_checkbox.checked = true;
                         }
+                        if(msg.list[sn] == "vk"){
+                            var lastfm_checkbox = document.getElementById('VK');
+                            lastfm_checkbox.checked = true;
+                        }
                     }
                 }
         });
     }
 
     function connlinkedin(){
-        if(document.getElementById('li').checked){
             window.location="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77htiwwawo0jau&redirect_uri=http://localhost:3000/&state=987654321&scope=r_basicprofile";
-            return false;
-        }
-        return true;
     }
 
     function connVK(){
-        window.location="https://oauth.vk.com/authorize?client_id=7299886&display=page&redirect_uri=http://localhost:3000/links?sn=vk&scope=friends&response_type=token&v=5.103";
+        var vk1 = document.getElementById('vk_username');
+        var checkbox = document.getElementById("VK");
+        if(!vk1.value) {
+            vk1.setAttribute("style", "border-color: red;")
+            checkbox.checked = false;
+        } else{
+            if(checkbox.checked){
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func:'insertUserName',sn:'vk',user:vk1.value}),
+                    success: (data) => {
+                        console.log('data');
+                        if (data==true)
+                            console.log("username inserted for VK");
+                        else
+                            console.log("username failed for VK");
+                        window.location="https://oauth.vk.com/authorize?client_id=7299886&display=page&redirect_uri=http://localhost:3000/links?sn=vk&scope=friends&response_type=token&v=5.103";
+                    }
+                });
+            }
+
+        }
     }
 
     function connLastfm(){
@@ -171,7 +186,7 @@
                     type: 'POST',
                     contentType: 'application/json',
                     dataType: 'json',
-                    data: JSON.stringify({func:'insertLFMuser',user:lastfmName.value}),
+                    data: JSON.stringify({func:'insertUserName',sn:'lastfm',user:lastfmName.value}),
                     success: (data) => {
                         console.log('data');
                         if (data==true)

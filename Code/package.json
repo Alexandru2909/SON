@@ -24,6 +24,6 @@
     "lastfmapi": "^0.1.1",
     "node-fetch": "^2.6.0",
     "twitter": "^1.7.1",
-    "vk-call": "^2.2.0"
+    "vk-io": "^4.0.0-rc.30"
   }
 }

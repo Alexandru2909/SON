@@ -4,6 +4,7 @@ var session = require('express-session')
 var fs = require('fs');
 var request = require('request');
 var LastfmAPI = require("lastfmapi");
+const vk_api = require('vk-io');
 var lfm = new LastfmAPI({
 	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
 	'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
@@ -100,20 +101,27 @@ app.post('/functions',(req,res) => {
             }
             res.send(ret);
             break;
-        case 'insertLFMuser':
-            var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
-            req.session.lastfm_user = req.body.user;
-            res.send(ret);
-            var username = req.session.lastfm_user;
-            console.log(username);
-            lfm.user.getFriends({
-                'user':username
-            }, function(err, friends){
-                if(err){
-                    throw err;
-                }
-                tools.addFriend(jsonData, req.session.email, friends, "lastfm");
-            });
+        case 'insertUserName':
+            var ret = tools.putuser(jsonData,req.body.sn,req.session.email,req.body.user);
+            switch(req.body.sn){
+                case 'lastfm':
+                    req.session.lastfm_user = req.body.user;
+                    res.send(ret);
+                    var username = req.session.lastfm_user;
+                    lfm.user.getFriends({
+                        'user':username
+                    }, function(err, friends){
+                        if(err){
+                            throw err;
+                        }
+                        tools.addFriend(jsonData, req.session.email, friends, "lastfm");
+                    });
+                    break;
+                case 'vk':
+                    req.session.vk_user = req.body.user;
+                    res.send(ret);
+            }
+           
 
             // clientTwitter.get('friends/list', function(err, data){
             //     if(err){
@@ -152,7 +160,23 @@ app.post('/functions',(req,res) => {
                     });
                 }
             }
-
+        case 'addVKToken':
+            const vk = new vk_api.VK({
+                token: req.body.token
+            });
+             
+            async function run() {
+                const response = await vk.api.friends.get({
+                    owner_id: 580684984,
+                    fields:['nickname','country','city','photo_100']
+                });
+                return response;
+            };
+            run().then((data)=>{
+                var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
+            });
+            res.send(ret);
+            break;
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){
                 for(user in jsonData.users){
@@ -254,11 +278,6 @@ app.post('/functions',(req,res) => {
                     res.send({"response" : jsonData.users[user].acquaintances});
                 }
             }
-
-        case 'getFriends':
-
-
-            break;
         default:
             console.log('nothing');
     }
