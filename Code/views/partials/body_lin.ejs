@@ -59,7 +59,6 @@
 <script>
     redirectProcess();
     // updateLinks();
-    var lastfmName = document.getElementById('lastfm_username').value;
 
     function redirectProcess(){
         var url = window.location.href;
@@ -103,27 +102,31 @@
         }
         return true;
     }
-    function connLastfm(name){
-        $('#lfm').change(function () {
-        if(this.checked) 
-            $('#lastfm_usename').prop('required', true);
-        });
-        if(document.getElementById("lfm").checked){
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func:'insertLFMuser',user:name}),
-                success: (data) => {
-                    if (data==true)
-                        console.log("username inserted for LASTFM");
-                    else
-                        console.log("username failed for LASTFM");
-                }
-            });
-            var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
-            window.location = authUrl;
+    function connLastfm(){
+        var lastfmName = document.getElementById('lastfm_username');
+        var checkbox = document.getElementById("lfm");
+        if(!lastfmName.value) {
+            lastfmName.setAttribute("style", "border-color: red;")
+            checkbox.checked = false;
+            console.log("Nope");
+        } else{
+            if(checkbox.checked){
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func:'insertLFMuser',user:lastfmName.value}),
+                    success: (data) => {
+                        if (data==true)
+                            console.log("username inserted for LASTFM");
+                        else
+                            console.log("username failed for LASTFM");
+                    }
+                });
+                var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
+                window.location = authUrl;
+            }
         }
     }
 </script>
