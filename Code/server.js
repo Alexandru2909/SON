@@ -99,7 +99,10 @@ app.post('/functions',(req,res) => {
         case 'insertLFMuser':
             var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
             res.send(ret);
-            //TODO WRITE DOWN
+            let x = JSON.stringify(jsonData);
+            fs.writeFile('database.json',x,(err)=>{
+                if ( err) throw err;
+            });
             break;
         case 'toggleLink':     
             let user_id = 0;   
