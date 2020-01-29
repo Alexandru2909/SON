@@ -98,32 +98,12 @@ app.post('/functions',(req,res) => {
             break;
         case 'insertLFMuser':
             var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
+            req.session.lastfm_user = req.body.user;
             res.send(ret);
             //TODO WRITE DOWN
             break;
         case 'toggleLink':     
-            let user_id = 0;   
-            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");    
-            request.get({
-                url: 'http://ws.audioscrobbler.com/2.0/?method=user.getinfo&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json',
-                json: true,
-                headers: {'User-Agent': 'request'}
-              }, (err, res, data) => {
-                if (err) {
-                  console.log('Error:', err);
-                } else if (res.statusCode !== 200) {
-                  console.log('Status:', res.statusCode);
-                } else {
-                  // data is already parsed as JSON:
-                  console.log(data.html_url);
-                }
-            });
-            var ret = tools.toggleLink(jsonData, req.session.email, req.body.sn, user_id);
-            if(ret == true){
-                req.session.lastfm_toggle = true;
-                req.session.lastfm_token = req.body.user_token;
-            }
-            res.send(ret);
+            req.session.lastfm_toggle = true;
             break;
         case 'upgradeLinks':
             var listOfSN = [];

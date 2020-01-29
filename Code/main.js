@@ -68,18 +68,6 @@ module.exports = {
             next();
         }
     },
-    toggleLink:function(jsonData, user_email, sn, user_id){
-        for(var user in jsonData.users){
-            if((jsonData.users[user].email == user_email)){
-                jsonData.users[user].lastfm_id = user_id;
-                break;
-            }
-        }
-
-        fs.writeFile('database.json', JSON.stringify(jsonData),(err)=>{
-            if (err) throw err;
-        });
-    },
     addAcq:function(jsonData, addToEmail, acqID, sn){
         let found = false;
         for(var user in jsonData){
