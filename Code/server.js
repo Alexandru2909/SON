@@ -10,8 +10,11 @@ var lfm = new LastfmAPI({
 });
 var Twitter = require("twitter");
 var clientTwitter = new Twitter({
-    "consumer_key" : "",
-    "consumer_secret" : ""
+    consumer_key : "XGy6COOt115UfbvCC8jvmf0Ng",
+    consumer_secret : "raotGUduELFwJcdmE2c7BXrvR39jA9AHVOYeIlZtqpalDCtcLB",
+    access_token_key: "1178909523689578497-L3NV0l1GFLd0PLo8JfuwYZEgKxamXp",
+    access_token_secret: "Edw5MeJ8A14SrtWm9hY4dCiE8fFA1cPQECHOsQ57q3XY6"
+
 });
 let jsonData = require('./database.json');
 var tools = require('./main.js');
@@ -105,8 +108,24 @@ app.post('/functions',(req,res) => {
                 if ( err) throw err;
             });
             break;
+        case 'requestTokenTwitter':    
+            clientTwitter.post("https://api.twitter.com/oauth/request_token", { oauth_callback: "http://www.localhost:3000/links?sn=twitter" }, function(err, response) {
+                var string = response.split("&")
+                for (var i = 0; i < string.length; i++) {
+                    string[i] = string[i].split("=")
+                }
+                console.log(string);
+                if (string[2][1] == "true") {
+                    var oauth_token = string[0][1]
+                    var oauth_token_secret = string[1][1]
+                }
+                res.send({token: oauth_token, secret: oauth_token_secret});
+            })
+            break;
         case 'toggleLink':     
-            req.session.lastfm_toggle = true;
+            if(req.body.sn == "lastfm"){
+                req.session.lastfm_toggle = true;
+            }
             break;
         case 'upgradeLinks':
             var listOfSN = [];

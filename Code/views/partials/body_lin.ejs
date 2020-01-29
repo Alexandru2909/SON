@@ -48,7 +48,7 @@
                     <img src="img/twitter.svg">
                     <input type="text" id='twitter_username' placeholder="Enter username">
                     <label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" id = "twitter" onchange="connTwitter()">
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -108,9 +108,7 @@
         if(!lastfmName.value) {
             lastfmName.setAttribute("style", "border-color: red;")
             checkbox.checked = false;
-            console.log("Nope");
         } else{
-            console.log('hi');
             if(checkbox.checked){
                 $.ajax({
                     url: '/functions',
@@ -129,6 +127,23 @@
                     }
                 });
             }
+        }
+    }
+
+    function connTwitter(){
+        var checkbox = document.getElementById("twitter");
+        if(checkbox.checked){
+            $.ajax({
+                url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func:'requestTokenTwitter'}),
+                    success: (data) => {       
+                        var authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + data.token;
+                        window.location = authUrl;
+                    }
+            });
         }
     }
 </script>
