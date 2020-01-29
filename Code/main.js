@@ -15,11 +15,7 @@ module.exports = {
                 'friends':[],
                 'lastfm_id':'0',
                 'lastfm_username': "",
-                'twitter_id': "",
                 'vk_username':'',
-                'lastfm_linked': false,
-                'twitter_linked': false,
-                'vk_linked' : false,
                 'date':Date.now()};
         console.log(initialObj);
         initialObj.users.push(obj);
@@ -34,14 +30,18 @@ module.exports = {
         switch(network){
             case 'lastfm':
                 initialObj.users[x].lastfm_username=name;
-                return true;
+                break;
             case 'vk':
                 initialObj.users[user].vk_username= name;
-                return true;
+                break;
             default:
-                return false;
+                break;
         }
-
+        var x = JSON.stringify(initialObj);
+        fs.writeFile('database.json',x,(err)=>{
+            if ( err) throw err;
+        });
+        return true;
     },
     getFriends:function(initialObj,email,network){
         for ( var user in initialObj.users){
@@ -93,36 +93,28 @@ module.exports = {
             if (err) throw err;
         })
     },
-    addFriend:function(jsonData, addToEmail, acqID, sn){
+    addFriend:function(jsonData, addToEmail, friends, sn){
+        let new_friends_list = [];
         let found = false;
         if(sn == "lastfm"){
             for(var user in jsonData.users){
                 if(jsonData.users[user].email == addToEmail){
-                    for(var friend in jsonData.users){
-                        if(jsonData.users[friend].lastfm_id == acqID){
-                            for(var sn in jsonData.users[user].friends){
-                                if(jsonData.users[user].friends.sn == "lastfm"){
-                                    if(!jsonData.users[user].friends.friends.includes(jsonData.users[friend].email)){
-                                        jsonData.users[user].friends.friends = jsonData.users[user].friends.friends.push(jsonData.users[friend].email);
-                                    }
-                                    found = true;
-                                    break;
-                                }
+                    for(var net in jsonData.users[user].friends){
+                        if(jsonData.users[user].friends[net].sn == sn){
+                            for (var index in friends.user){
+                                new_friends_list.push(friends.user[index].name);
                             }
+                            jsonData.users[user].friends[net].friends=new_friends_list;
+                            var x = JSON.stringify(jsonData);
+                            fs.writeFile('database.json',x,(err)=>{
+                                if ( err) throw err;
+                            });
+                            return true;
                         }
-                        if(found == true){
-                            break;
-                        }
-                    }
-                }
-                if(found == true){
-                    break;
                 }
             }
-            fs.writeFile('database.json', JSON.stringify(jsonData), (err)=>{
-                if (err) throw err;
-            })
         }
+    }
 
         if(sn == "twitter"){
             for(var user in jsonData.users){
@@ -148,9 +140,7 @@ module.exports = {
                     break;
                 }
             }
-            fs.writeFile('database.json', JSON.stringify(jsonData), (err)=>{
-                if (err) throw err;
-            })
+
         }
     }
 };
