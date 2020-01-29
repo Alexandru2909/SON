@@ -58,7 +58,8 @@
 </html>
 <script>
     redirectProcess();
-    // updateLinks();
+    updateLinks();
+
     function redirectProcess(){
         var url = window.location.href;
         url = new URL(url);
@@ -72,6 +73,11 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: token}),
+                success: (data) => {
+                    if(data){
+                        window.location = "localhost:3000/links";
+                    }
+                }
             });
         }
     }
@@ -84,13 +90,19 @@
             dataType: 'json',
             data: JSON.stringify({func: 'updateLinks'}),
             success: function(msg, status, jqXHR) {
-                    for(sn in msg){
-                        if(sn == "lastfm"){
-                            var lastfm_checkbox = document.getElementById('lfm');
-                            lastfm_checkbox.checked = true;
-                        }
+                for(sn in msg.list){
+                    console.log(msg.list[sn]);
+                    if(msg.list[sn] == "lastfm"){
+                        console.log("in gere");
+                        var lastfm_checkbox = document.getElementById('lfm');
+                        lastfm_checkbox.checked = true;
+                    }
+                    if(msg.list[sn] == "twitter"){
+                        var twitter_checkbox = document.getElementById("twitter");
+                        twitter_checkbox.checked = true;
                     }
                 }
+            }
         });
     }
 
