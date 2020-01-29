@@ -13,11 +13,31 @@ module.exports = {
                 'pass':psw,
                 'acquaintances':[],
                 'friends':[],
-                'lastfm_id': "0",
+                'lastfm_id':'0',
+                'lastfm_username': "",
+                'vk_username':'',
                 'date':Date.now()};
         console.log(initialObj);
         initialObj.users.push(obj);
         return true;
+    },
+    putuser:function(initialObj,network,email,name){
+        var x = 0;
+        for ( var user in initialObj.users){
+            if(initialObj.users[user].email === email)
+                x=user
+        }
+        switch(network){
+            case 'lastfm':
+                initialObj.users[x].lastfm_username=name;
+                return true;
+            case 'vk':
+                initialObj.users[user].vk_username= name;
+                return true;
+            default:
+                return false;
+        }
+
     },
     getFriends:function(initialObj,email,network){
         for ( var user in initialObj.users){

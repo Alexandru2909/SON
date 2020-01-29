@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var session = require('express-session')
 var fs = require('fs');
+var request = require('request');
 var LastfmAPI = require("lastfmapi");
 var lfm = new LastfmAPI({
 	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
@@ -95,30 +96,28 @@ app.post('/functions',(req,res) => {
             }
             res.send(ret);
             break;
+        case 'insertLFMuser':
+            var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
+            res.send(ret);
+            //TODO WRITE DOWN
+            break;
         case 'toggleLink':     
             let user_id = 0;   
-            var username = "";
-            var api_sig = crypto.createHash('md5').update('api_key'+lfm.api_key+'methodauth.getSessiontoken' + req.body.user_token + lfm.secret).digest("hex");
-            console.log("asta e: ");
-            console.log(req.body.user_token, api_sig);
-            fetch('http://ws.audioscrobbler.com/2.0/?method=auth.getsession&token=' + req.body.user_token + '&api_key=a0a04802c25d3f828bf43e8c54e50ed8&api_sig=' + api_sig + '&format=json')
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-                            username = data.name
-                        })
-                        .catch(err => {
-                    console.error('Fetch error:', err);
-                        });
-            fetch('http://ws.audioscrobbler.com/2.0/?method=user.getinfo&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json')
-                        .then(response => response.json())
-                        .then(data => {
-                                console.log(data);
-                                // user_id = data.id;
-                        })
-                        .catch(err => {
-                    console.error('Fetch error:', err);
-                        });
+            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");    
+            request.get({
+                url: 'http://ws.audioscrobbler.com/2.0/?method=user.getinfo&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json',
+                json: true,
+                headers: {'User-Agent': 'request'}
+              }, (err, res, data) => {
+                if (err) {
+                  console.log('Error:', err);
+                } else if (res.statusCode !== 200) {
+                  console.log('Status:', res.statusCode);
+                } else {
+                  // data is already parsed as JSON:
+                  console.log(data.html_url);
+                }
+            });
             var ret = tools.toggleLink(jsonData, req.session.email, req.body.sn, user_id);
             if(ret == true){
                 req.session.lastfm_toggle = true;
