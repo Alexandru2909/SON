@@ -198,5 +198,77 @@ module.exports = {
             }
 
         }
+    },
+    getRealName:function(real_name){
+        ret_name = real_name
+        ret_name = ret_name.replace(/\s/g, "");
+        ret_name = ret_name.toLowerCase();
+        return ret_name;
+    },
+
+    lookUpUser:function(jsonData, nickname, fromSN, searchInSN){
+        var ret_user = [];
+        for(user in jsonData.users){
+            if(fromSN == "lastfm"){
+                if(searchInSN == "twitter"){
+                    if(jsonData.users[user].lastfm_username == nickname){
+                        if(jsonData.users[user].twitter_username){
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("twitter");
+                            return ret_user;
+                        }
+                    }
+                }
+                if(searchInSN == "vk"){
+                    if(jsonData.users[user].lastfm_username == nickname){
+                        if(jsonData.users[user].vk_username) {
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("vk");
+                            return ret_user;
+                        }
+                    }
+                }
+            }
+            if(fromSN == "twitter"){
+                if(searchInSN == "lastfm"){
+                    if(jsonData.users[user].twitter_username == nickname){
+                        if(jsonData.users[user].lastfm_username){
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("lastfm");
+                            return ret_user;
+                        }
+                    }
+                }
+                if(searchInSN == "vk"){
+                    if(jsonData.users[user].twitter_username == nickname){
+                        if(jsonData.users[user].vk_username) {
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("vk");
+                            return ret_user;
+                        }
+                    }
+                }
+            }
+            if(fromSN == "vk"){
+                if(searchInSN == "twitter"){
+                    if(jsonData.users[user].vk_username == nickname){
+                        if(jsonData.users[user].twitter_username){
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("twitter");
+                            return ret_user;
+                        }
+                    }
+                }
+                if(searchInSN == "lastfm"){
+                    if(jsonData.users[user].vk_username == nickname){
+                        if(jsonData.users[user].lastfm_username) {
+                            ret_user.push(jsonData.users[user]);
+                            ret_user.push("lastfm");
+                            return ret_user;
+                        }
+                    }
+                }
+            }
+        }
     }
 };

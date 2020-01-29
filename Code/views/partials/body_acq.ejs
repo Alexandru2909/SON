@@ -32,19 +32,48 @@
                     </div>
                 </div>
             </header>
-            <div class="row-padding">
-                <div class="user_profile">
-                    <div class="user_info">
-                        <p><b>Name</b></p>
-                        <p>Info</p>
-                    </div>
-                </div>
+            <div class="row-padding" id="alist">
             </div>
         </div>
 
 </html>
 
 <script>
+    getAcqList();
+    function getAcqList(){
+        $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func: 'getAcqList'}),
+                success: (data) => {
+                    var acquaintances = data.response;
+                    var name = "";
+                    var link = "";
+                    for(a in acquaintances){
+                        switch(acquaintances[a].alsoOn){
+                            case 'lastfm':
+                                name = acquaintances[a].acq.lastfm_username;
+                                link = "https://www.last.fm/user/" + name;
+                                break;
+                            case 'twitter':
+                                name = acquaintances[a].acq.twitter_username;
+                                link = "https://twitter.com/" + name;
+                                break;
+                            case 'vk':
+                                name = acquaintances[a].acq.vk_username;
+                                link = "N/A";
+                                break;
+                        }
+                        var node = `<div class='user_profile'><p><b>Name: ${name}</b></p><p>Real name: ${acquaintances[a].acq.fname} ${acquaintances[a].acq.lname} </p><p>From: You might know this person from <a target = '_blank' id="account_link" href = ${link}>${acquaintances[a].alsoOn}</a></p></div>`;
+                        console.log(node);
+                        $('#alist').append(node);
+                    }
+                }
+            });
+    }
+
     customSelect("filter-select age");
     customSelect("filter-select city");
     function customSelect(selectClassName){

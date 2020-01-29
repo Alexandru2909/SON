@@ -50,7 +50,6 @@
                 data: JSON.stringify({func: 'getFriends1',network: networks[net]}),
                 success: (data) => {
                     for(user in data.response){
-                            // console.log(data.response,"!!!!!!!!!!!!");
                             var imgsrc = data.response[user].img;
                             var node = `<div class='user_profile'>`;
                             if(imgsrc){

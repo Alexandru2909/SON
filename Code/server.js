@@ -203,33 +203,57 @@ app.post('/functions',(req,res) => {
 
             res.send({list:listOfSN});
             break;
-        case 'getAcq':
-            var username = "";
-            lfm.user.getInfo({}, 
-                function (err, user_info){
-                    if(err){
-                        throw err;
+
+        case 'addAcq':
+            var acqList = []
+            for(u in jsonData.users){
+                if(jsonData.users[u].email == req.session.email){
+                    var user = jsonData.users[u];
+                    for(fr in user.friends){
+                        for(acq in user.friends){
+                            if(user.friends[acq].sn != user.friends[fr].sn){
+                                console.log(user.friends[fr].sn, user.friends[acq].sn);
+                                for(f in user.friends[fr].friends){
+                                    // console.log(user.friends[fr].friends[f].name);
+                                    // console.log("____");
+                                    var found = false
+                                    for(a in user.friends[acq].friends){
+                                        if(user.friends[fr].friends[f].real_name){
+                                            if(tools.getRealName(user.friends[acq].friends[a].real_name).localeCompare(tools.getRealName(user.friends[fr].friends[f].real_name)) == 0){
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if(found == false){
+                                        var ret = tools.lookUpUser(jsonData, user.friends[fr].friends[f].name, user.friends[fr].sn, user.friends[acq].sn);
+                                        if(ret){
+                                            var obj = {
+                                                "acq" : ret[0],
+                                                "alsoOn" : ret[1]
+                                            }
+                                            acqList.push(obj);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    username = user_info.name;
+                    jsonData.users[u].acquaintances = acqList;
+                    console.log(acqList);
+                    fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+                        if ( err) throw err;
+                    });
                 }
-                )
-            lfm.user.getFriends({
-                'user': username
-            }, function(err, friends){
-                if(err){
-                    throw err;
+            }
+
+            break;
+        case 'getAcqList':
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    res.send({"response" : jsonData.users[user].acquaintances});
                 }
-                let users_list = [];
-                for(var user in jsonData.users){
-                    users_list.push(jsonData.users[user].lastfm_id);
-                }
-                for(var user in friends.friends){
-                    if(users_list.includes(friends.friends[user].id)){
-                        if(!tools.isFriend(jsonData, req.session.email, friends.friends[user].id, "lastfm"))
-                        tools.addAcq(jsonData, req.session.email, friends.friends[user].id, "lastfm");
-                    }
-                }
-            });
+            }
 
         case 'getFriends':
 

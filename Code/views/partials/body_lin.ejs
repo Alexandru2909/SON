@@ -63,6 +63,15 @@
         var url = window.location.href;
         url = new URL(url);
         var sn = url.searchParams.get("sn");
+        $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func: 'addAcq'}),
+                success: (data) => {
+                }
+            });
         switch(sn){
             case 'lastfm':
             var token = url.searchParams.get("token");
