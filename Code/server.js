@@ -22,6 +22,7 @@ const fetch = require('node-fetch');
 const crypto = require('crypto');
 
 
+
 app.use(express.static(__dirname + '/views/public'));
 app.use(session({secret: 'thisismysecret'}));
 // set the view engine to ejs
@@ -141,17 +142,53 @@ app.post('/functions',(req,res) => {
             })
             break;
         case 'toggleLink':     
-            if(req.body.sn == "lastfm"){
-                req.session.lastfm_toggle = true;
+            if(req.body.social_network == "lastfm"){
+                for(user in jsonData.users){
+                    if(jsonData.users[user].email == req.session.email){
+                        jsonData.users[user].lastfm_linked = true
+                        fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                            if(err){ throw err;}
+                        })
+                    }
+                }
             }
+            if(req.body.social_network == "twitter"){
+                for(user in jsonData.users){
+                    if(jsonData.users[user].email == req.session.email){
+                        jsonData.users[user].twitter_linked = true
+                        fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                            if(err){ throw err;}
+                        })
+                    }
+                }
+            }
+
+            res.send(true);
             break;
-        case 'upgradeLinks':
+        case 'updateLinks':
             var listOfSN = [];
-            if(req.session.lastfm_toggle == true)
-                listOfSN.push("lastfm");
-            if(req.session.twitter_toggle == true)
-                listOfSN.push("twitter");
-            res.send(listOfSN);
+            console.log(listOfSN);
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    if(jsonData.users[user].lastfm_linked == true){
+                    listOfSN.push("lastfm");
+                    console.log("in lastfm");
+                    }
+                    console.log(listOfSN);
+                    if(jsonData.users[user].twitter_linked == true){
+                        listOfSN.push("twitter");
+                        console.log('in twitter');
+                    }
+                    console.log(listOfSN);
+                    if(jsonData.users[user].vk_linked == true){
+                        listOfSN.push("vk");
+                        console.log('in vk');
+                    }
+                }
+            }
+
+            res.send({list:listOfSN});
+            break;
         case 'getAcq':
             var username = "";
             lfm.user.getInfo({}, 
