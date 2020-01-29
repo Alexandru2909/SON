@@ -77,15 +77,26 @@
             });
             break;
             case 'twitter':
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: token}),
-                success: (data) => {
-                }
-            });
+                var oauth_token = url.searchParams.get("oauth_token");
+                var oauth_verifier = url.searchParams.get("oauth_verifier");
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: oauth_token, verifier: oauth_verifier}),
+                    success: (data) => {
+                    }
+                });
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func: 'insertTwitterFriends'}),
+                    success: (data) => {
+                    }
+                });
                 break;
             case 'vk':
             var hashes = location.hash.split('&');

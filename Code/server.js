@@ -140,6 +140,19 @@ app.post('/functions',(req,res) => {
                 res.send({token: oauth_token, secret: oauth_token_secret});
             })
             break;
+        case 'insertTwitterFriends':
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    var username = jsonData.users[user].twitter_username;
+
+                    clientTwitter.get("friends/list", { count: 100, screen_name: username, skip_status: "true" }, function(err, res) {
+                        var friends = JSON.parse(JSON.stringify(res))["users"]
+                        console.log(friends);
+                        tools.addFriend(jsonData, req.session.email, friends, "twitter");
+                    });
+                }
+            }
+
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){
                 for(user in jsonData.users){
@@ -152,14 +165,23 @@ app.post('/functions',(req,res) => {
                 }
             }
             if(req.body.social_network == "twitter"){
-                for(user in jsonData.users){
-                    if(jsonData.users[user].email == req.session.email){
-                        jsonData.users[user].twitter_linked = true
-                        fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
-                            if(err){ throw err;}
-                        })
+                request.post("https://api.twitter.com/oauth/access_token?oauth_token=" + req.body.user_token + "&oauth_verifier=" + req.body.verifier, function(err, res, body){
+                    var string = res.body.split("&")
+                    for (var i = 0; i < string.length; i++) {
+                        string[i] = string[i].split("=")
                     }
-                }
+                    var screen_name = string[3][1];
+                    for(user in jsonData.users){
+                        if(jsonData.users[user].email == req.session.email){
+                            jsonData.users[user].twitter_linked = true;
+                            jsonData.users[user].twitter_username = screen_name;
+                            fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                                if(err){ throw err;}
+                            })
+                            break;
+                        }
+                    }
+                });
             }
             res.send(true);
             break;

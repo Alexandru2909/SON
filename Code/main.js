@@ -26,7 +26,7 @@ module.exports = {
                 }],
                 'lastfm_id':'0',
                 'lastfm_username': "",
-                'twitter_id': "",
+                'twitter_username': "",
                 'vk_id':'',
                 'lastfm_linked': false,
                 'twitter_linked': false,
@@ -111,13 +111,53 @@ module.exports = {
     addFriend:function(jsonData, addToEmail, friends, sn){
         let new_friends_list = [];
         let found = false;
+        console.log(friends)
         if(sn == "lastfm"){
             for(var user in jsonData.users){
                 if(jsonData.users[user].email == addToEmail){
                     for(var net in jsonData.users[user].friends){
                         if(jsonData.users[user].friends[net].sn == sn){
                             for (var index in friends.user){
-                                new_friends_list.push(friends.user[index].name);
+                                var obj = {
+                                    'img' : friends.user[index].image[1]['#text'],
+                                    'name' : friends.user[index].name,
+                                    'real_name' : friends.user[index].realname,
+                                    'country' : friends.user[index].country,
+                                    'from' : "LastFM",
+                                    'link' : 'https://www.last.fm/user/' + friends.user[index].name
+                                }
+                                console.log(obj);
+                                new_friends_list.push(obj);
+                            }
+                        }
+                        jsonData.users[user].friends[net].friends=new_friends_list;
+                        var x = JSON.stringify(jsonData);
+                        fs.writeFile('database.json',x,(err)=>{
+                            if ( err) throw err;
+                        });
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        if(sn == "twitter"){
+            for(var user in jsonData.users){
+                if(jsonData.users[user].email == addToEmail){
+                    for(var net in jsonData.users[user].friends){
+                        if(jsonData.users[user].friends[net].sn == sn){
+                            for (var index in friends){
+                                var obj = {
+                                    'img' : "",
+                                    'name' : friends[index].screen_name,
+                                    'real_name' : friends[index].name,
+                                    'country' : friends[index].location,
+                                    'from' : "Twitter",
+                                    'link' : 'https://twitter.com/' + friends[index].screen_name
+                                };
+                                console.log(obj);
+                                new_friends_list.push(obj);
                             }
                             jsonData.users[user].friends[net].friends=new_friends_list;
                             var x = JSON.stringify(jsonData);
@@ -126,10 +166,11 @@ module.exports = {
                             });
                             return true;
                         }
+                    }
                 }
             }
         }
-    }
+
 
         if(sn == "twitter"){
             for(var user in jsonData.users){

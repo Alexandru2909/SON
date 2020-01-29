@@ -16,6 +16,15 @@
     height: 0;
 }
 
+#account_link {
+    color:#f1f1f1;
+    text-decoration: underline;
+}
+
+#account_link:hover {
+    font-style: italic;
+}
+
 .slider {
     position: absolute;
     cursor: pointer;
