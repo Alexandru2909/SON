@@ -101,20 +101,27 @@ app.post('/functions',(req,res) => {
             }
             res.send(ret);
             break;
-        case 'insertLFMuser':
-            var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
-            req.session.lastfm_user = req.body.user;
-            res.send(ret);
-            var username = req.session.lastfm_user;
-            console.log(username);
-            lfm.user.getFriends({
-                'user':username
-            }, function(err, friends){
-                if(err){
-                    throw err;
-                }
-                tools.addFriend(jsonData, req.session.email, friends, "lastfm");
-            });
+        case 'insertUserName':
+            var ret = tools.putuser(jsonData,req.body.sn,req.session.email,req.body.user);
+            switch(req.body.sn){
+                case 'lastfm':
+                    req.session.lastfm_user = req.body.user;
+                    res.send(ret);
+                    var username = req.session.lastfm_user;
+                    lfm.user.getFriends({
+                        'user':username
+                    }, function(err, friends){
+                        if(err){
+                            throw err;
+                        }
+                        tools.addFriend(jsonData, req.session.email, friends, "lastfm");
+                    });
+                    break;
+                case 'vk':
+                    req.session.vk_user = req.body.user;
+                    res.send(ret);
+            }
+           
 
             // clientTwitter.get('friends/list', function(err, data){
             //     if(err){
@@ -166,11 +173,9 @@ app.post('/functions',(req,res) => {
                 return response;
             };
             run().then((data)=>{
-                tools.putuser(jsonData,'vk',req.session.email,req.body.user_id);
                 var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
             });
- 
-            // res.send(ret);
+            res.send(ret);
             break;
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){

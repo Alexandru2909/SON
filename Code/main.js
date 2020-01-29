@@ -27,7 +27,7 @@ module.exports = {
                 'lastfm_id':'0',
                 'lastfm_username': "",
                 'twitter_username': "",
-                'vk_id':'',
+                'vk_username':'',
                 'lastfm_linked': false,
                 'twitter_linked': false,
                 'vk_linked' : false,
@@ -47,7 +47,8 @@ module.exports = {
                 initialObj.users[x].lastfm_username=name;
                 break;
             case 'vk':
-                initialObj.users[user].vk_id= name;
+                initialObj.users[user].vk_username= name;
+                initialObj.users[user].vk_linked = true;
                 break;
             default:
                 break;
@@ -173,10 +174,8 @@ module.exports = {
             for(var user in jsonData.users){
                 if(jsonData.users[user].email == addToEmail){
                     for(var net in jsonData.users[user].friends){
-                        console.log(net,jsonData.users[user].friends);
                         if(jsonData.users[user].friends[net].sn == sn){
                             for (var index in friends){
-                                console.log(index);
                                 if (friends[index].hasOwnProperty('country'))
                                     var cnt = friends[index].country.title;
                                 else
@@ -189,7 +188,6 @@ module.exports = {
                                     'from' : "VK",
                                     'link' : 'https://vk.com/id' + friends[index].id
                                 }
-                                console.log(obj);
                                 new_friends_list.push(obj);
                             }
                         
