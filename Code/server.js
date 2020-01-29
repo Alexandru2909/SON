@@ -167,22 +167,16 @@ app.post('/functions',(req,res) => {
             break;
         case 'updateLinks':
             var listOfSN = [];
-            console.log(listOfSN);
             for(user in jsonData.users){
                 if(jsonData.users[user].email == req.session.email){
                     if(jsonData.users[user].lastfm_linked == true){
                     listOfSN.push("lastfm");
-                    console.log("in lastfm");
                     }
-                    console.log(listOfSN);
                     if(jsonData.users[user].twitter_linked == true){
                         listOfSN.push("twitter");
-                        console.log('in twitter');
                     }
-                    console.log(listOfSN);
                     if(jsonData.users[user].vk_linked == true){
                         listOfSN.push("vk");
-                        console.log('in vk');
                     }
                 }
             }
