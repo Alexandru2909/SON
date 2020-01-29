@@ -49,7 +49,6 @@ module.exports = {
         }
     },
     toggleLink:function(jsonData, user_email, sn, user_id){
-        console.log("__________");
         for(var user in jsonData.users){
             if((jsonData.users[user].email == user_email)){
                 jsonData.users[user].lastfm_id = user_id;
@@ -60,7 +59,6 @@ module.exports = {
         fs.writeFile('database.json', JSON.stringify(jsonData),(err)=>{
             if (err) throw err;
         });
-        console.log("am scris");
     },
     addAcq:function(jsonData, addToEmail, acqID, sn){
         let found = false;

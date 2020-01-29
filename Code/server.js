@@ -14,6 +14,9 @@ var clientTwitter = new Twitter({
 });
 let jsonData = require('./database.json');
 var tools = require('./main.js');
+const fetch = require('node-fetch');
+const crypto = require('crypto');
+
 
 app.use(express.static(__dirname + '/views/public'));
 app.use(session({secret: 'thisismysecret'}));
@@ -94,24 +97,33 @@ app.post('/functions',(req,res) => {
             break;
         case 'toggleLink':     
             let user_id = 0;   
-            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");    
-            lfm.user.getInfo({}, 
-                function (err, user_info){
-                    if(err){
-                        console.log("eroare");
-                        throw err;
-                    }
-                    console.log("hatz");
-                    console.log(user_info);
-                    user_id = user_info.id;
-                }
-                );
+            var username = "";
+            var api_sig = crypto.createHash('md5').update('api_key'+lfm.api_key+'methodauth.getSessiontoken' + req.body.user_token + lfm.secret).digest("hex");
+            console.log("asta e: ");
+            console.log(req.body.user_token, api_sig);
+            fetch('http://ws.audioscrobbler.com/2.0/?method=auth.getsession&token=' + req.body.user_token + '&api_key=a0a04802c25d3f828bf43e8c54e50ed8&api_sig=' + api_sig + '&format=json')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            username = data.name
+                        })
+                        .catch(err => {
+                    console.error('Fetch error:', err);
+                        });
+            fetch('http://ws.audioscrobbler.com/2.0/?method=user.getinfo&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json')
+                        .then(response => response.json())
+                        .then(data => {
+                                console.log(data);
+                                // user_id = data.id;
+                        })
+                        .catch(err => {
+                    console.error('Fetch error:', err);
+                        });
             var ret = tools.toggleLink(jsonData, req.session.email, req.body.sn, user_id);
-            console.log("c'est fini");
-            // if(ret == true){
-            //     req.session.lastfm_toggle = true;
-            //     req.session.lastfm_token = req.body.user_token;
-            // }
+            if(ret == true){
+                req.session.lastfm_toggle = true;
+                req.session.lastfm_token = req.body.user_token;
+            }
             res.send(ret);
             break;
         case 'upgradeLinks':

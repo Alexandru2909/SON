@@ -14,6 +14,7 @@
             <div class="row-padding" id='logos'>
                 <div class="site_profile">
                     <img src="img/gmail.svg">
+                    <input type="text" id='gmail_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox">
                         <span class="slider round"></span>
@@ -21,6 +22,7 @@
                 </div>
                 <div class="site_profile">
                     <img src="img/lastfm.svg">
+                    <input type="text" id='lastfm_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox" id = "lfm" onchange="connLastfm()">
                         <span class="slider round"></span>
@@ -28,6 +30,7 @@
                 </div>
                 <div class="site_profile">
                     <img src="img/linkedin.svg">
+                    <input type="text" id='linkedin_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox" name='linkedin' id="li" value='1'>
                         <span class="slider round"></span>
@@ -35,6 +38,7 @@
                 </div>
                 <div class="site_profile">
                     <img src="img/steam.svg">
+                    <input type="text" id='steam_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox">
                         <span class="slider round"></span>
@@ -42,6 +46,7 @@
                 </div>
                 <div class="site_profile">
                     <img src="img/twitter.svg">
+                    <input type="text" id='twitter_username' placeholder="Enter username">
                     <label class="switch">
                         <input type="checkbox">
                         <span class="slider round"></span>
@@ -60,6 +65,7 @@
         url = new URL(url);
         var sn = url.searchParams.get("sn");
         var token = url.searchParams.get("token");
+        console.log(token)
         if(sn){
             $.ajax({
                 url: '/functions',
