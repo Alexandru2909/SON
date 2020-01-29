@@ -1,0 +1,29 @@
+{
+  "name": "son",
+  "version": "1.0.0",
+  "description": "Javascript Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Hello\"",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexandru2909/SON.git"
+  },
+  "author": "Cristi & Alex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alexandru2909/SON/issues"
+  },
+  "homepage": "https://github.com/Alexandru2909/SON#readme",
+  "dependencies": {
+    "ejs": "^1.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "lastfmapi": "^0.1.1",
+    "node-fetch": "^2.6.0",
+    "twitter": "^1.7.1",
+    "vk-call": "^2.2.0"
+  }
+}
