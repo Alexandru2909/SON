@@ -12,7 +12,18 @@ module.exports = {
                 'phone':phone,
                 'pass':psw,
                 'acquaintances':[],
-                'friends':[],
+                'friends':[{
+                    'sn': "lastfm",
+                    'friends' : []
+                },
+                {
+                    'sn': "twitter",
+                    'friends' : []
+                },
+                {
+                    'sn': "vk",
+                    'friends' : []
+                }],
                 'lastfm_id':'0',
                 'lastfm_username': "",
                 'twitter_id': "",
