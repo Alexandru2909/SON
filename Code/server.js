@@ -4,6 +4,7 @@ var session = require('express-session')
 var fs = require('fs');
 var request = require('request');
 var LastfmAPI = require("lastfmapi");
+const vk_api = require('vk-io');
 var lfm = new LastfmAPI({
 	'api_key' : 'a0a04802c25d3f828bf43e8c54e50ed8',
 	'secret' : '6279eb4e0d1b8ea831df19ddbee77ef2'
@@ -152,7 +153,25 @@ app.post('/functions',(req,res) => {
                     });
                 }
             }
-
+        case 'addVKToken':
+            const vk = new vk_api.VK({
+                token: req.body.token
+            });
+             
+            async function run() {
+                const response = await vk.api.friends.get({
+                    owner_id: 580684984,
+                    fields:['nickname','country','city','photo_100']
+                });
+                return response;
+            };
+            run().then((data)=>{
+                tools.putuser(jsonData,'vk',req.session.email,req.body.user_id);
+                var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
+            });
+ 
+            // res.send(ret);
+            break;
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){
                 for(user in jsonData.users){
@@ -230,11 +249,6 @@ app.post('/functions',(req,res) => {
                     }
                 }
             });
-
-        case 'getFriends':
-
-
-            break;
         default:
             console.log('nothing');
     }
