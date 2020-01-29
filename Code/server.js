@@ -66,6 +66,7 @@ app.post('/functions',(req,res) => {
     // console.log(jsonData);
     switch(req.body.func){
         case 'getFriends1':
+            
             var list = tools.getFriends(jsonData, req.session.email, req.body.network);
             res.send({'response': list});
             break;
@@ -103,10 +104,27 @@ app.post('/functions',(req,res) => {
             var ret = tools.putuser(jsonData,'lastfm',req.session.email,req.body.user);
             req.session.lastfm_user = req.body.user;
             res.send(ret);
-            let x = JSON.stringify(jsonData);
-            fs.writeFile('database.json',x,(err)=>{
-                if ( err) throw err;
+            var username = req.session.lastfm_user;
+            console.log(username);
+            lfm.user.getFriends({
+                'user':username
+            }, function(err, friends){
+                if(err){
+                    throw err;
+                }
+                tools.addFriend(jsonData, req.session.email, friends, "lastfm");
             });
+
+            // clientTwitter.get('friends/list', function(err, data){
+            //     if(err){
+            //         throw err;
+            //     }
+
+            //     for(var user in data.users){
+            //         tools.addFriend(jsonData, req.session.email, data.users[user].id, "twitter");
+            //     }
+            // });
+
             break;
         case 'requestTokenTwitter':    
             clientTwitter.post("https://api.twitter.com/oauth/request_token", { oauth_callback: "http://www.localhost:3000/links?sn=twitter" }, function(err, response) {
@@ -163,36 +181,7 @@ app.post('/functions',(req,res) => {
             });
 
         case 'getFriends':
-            var username = "";
-            lfm.user.getInfo({}, 
-                function (err, user_info){
-                    if(err){
-                        throw err;
-                    }
-                    username = user_info.name;
-                }
-            );
-            
-            lfm.user.getFriends({
-                'user':username
-            }, function(err, friends){
-                if(err){
-                    throw err;
-                }
-                for(var user in friends.friends){
-                    tools.addFriend(jsonData, req.session.email, friends.friends[user].id, "lastfm");
-                }
-            });
 
-            clientTwitter.get('friends/list', function(err, data){
-                if(err){
-                    throw err;
-                }
-
-                for(var user in data.users){
-                    tools.addFriend(jsonData, req.session.email, data.users[user].id, "twitter");
-                }
-            });
 
             break;
         default:
