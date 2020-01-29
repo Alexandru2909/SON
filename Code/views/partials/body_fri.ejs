@@ -53,7 +53,9 @@
                         fetch('http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=' + data.response[user] + '&api_key=a0a04802c25d3f828bf43e8c54e50ed8&format=json')
                         .then(response => response.json())
                         .then(data => {
-                            var node = `<div class='user_profile'><img alt='Profile pic' src=${data.image}><p><b>Name:${data.name}</b></p><p>Real name:${data.realname} </p><p>Country:${data.country}</p><p>Age:${data.age}</p></div>`;
+                            console.log(data,"!!!!!!!!!!!!");
+                            var imgsrc = data.user.image[1]['#text'];
+                            var node = `<div class='user_profile'><img alt='Profile pic' src=${imgsrc}><p><b>Name:${data.user.name}</b></p><p>Real name:${data.user.realname} </p><p>Country:${data.user.country}</p><p>From:LastFM</p></div>`;
                             console.log(node);
                             $('#flist').append(node);
                         })
