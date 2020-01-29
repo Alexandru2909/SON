@@ -27,7 +27,7 @@ module.exports = {
                 'lastfm_id':'0',
                 'lastfm_username': "",
                 'twitter_id': "",
-                'vk_username':'',
+                'vk_id':'',
                 'lastfm_linked': false,
                 'twitter_linked': false,
                 'vk_linked' : false,
