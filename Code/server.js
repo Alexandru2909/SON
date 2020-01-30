@@ -301,6 +301,63 @@ app.post('/functions',(req,res) => {
         case 'downloadGraph':
             
             break;
+        case 'vkOut':
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    jsonData.users[user].vk_username = "";
+                    jsonData.users[user].vk_linked = false;
+                    for(f in jsonData.users[user].friends){
+                        if(jsonData.users[user].friends[f].sn == "vk"){
+                            jsonData.users[user].friends[f].friends = [];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+                if ( err) throw err;
+            });
+            res.send(true);
+            break;
+        case 'lastfmOut':
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    jsonData.users[user].lastfm_username = "";
+                    jsonData.users[user].lastfm_linked = false;
+                    for(f in jsonData.users[user].friends){
+                        if(jsonData.users[user].friends[f].sn == "lastfm"){
+                            jsonData.users[user].friends[f].friends = [];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+                if ( err) throw err;
+            });
+            res.send(true);
+            break;
+        case 'twitterOut':
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    jsonData.users[user].twitter_username = "";
+                    jsonData.users[user].twitter_linked = false;
+                    for(f in jsonData.users[user].friends){
+                        if(jsonData.users[user].friends[f].sn == "twitter"){
+                            jsonData.users[user].friends[f].friends = [];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+                if ( err) throw err;
+            });
+            res.send(true);
+            break;
         default:
             console.log('nothing');
     }

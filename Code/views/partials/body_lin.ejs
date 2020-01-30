@@ -168,6 +168,19 @@
                         window.location="https://oauth.vk.com/authorize?client_id=7299886&display=page&redirect_uri=http://localhost:3000/links?sn=vk&scope=friends&response_type=token&v=5.103";
                     }
                 });
+            } else {
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func:'vkOut'}),
+                    success: (data) => {
+                        if(data){
+                            redirectProcess();
+                        }
+                    }
+                });
             }
 
         }
@@ -176,11 +189,12 @@
     function connLastfm(){
         var lastfmName = document.getElementById('lastfm_username');
         var checkbox = document.getElementById("lfm");
-        if(!lastfmName.value) {
-            lastfmName.setAttribute("style", "border-color: red;")
-            checkbox.checked = false;
-        } else{
-            if(checkbox.checked){
+        console.log(checkbox.checked);
+        if(checkbox.checked){
+            if(!lastfmName.value) {
+                lastfmName.setAttribute("style", "border-color: red;")
+                checkbox.checked = false;
+            } else {
                 $.ajax({
                     url: '/functions',
                     type: 'POST',
@@ -198,6 +212,19 @@
                     }
                 });
             }
+        } else{
+            $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func:'lastfmOut'}),
+                success: (data) => {
+                    if(data){
+                        redirectProcess();
+                    }
+                }
+            });
         }
     }
 
@@ -215,6 +242,19 @@
                         window.location = authUrl;
                     }
             });
-        }
+        } else {
+                $.ajax({
+                    url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func:'twitterOut'}),
+                    success: (data) => {
+                        if(data){
+                            redirectProcess();
+                        }
+                    }
+                });
+            }
     }
 </script>
