@@ -6,7 +6,7 @@
             <div class="container">
                 <h1><b>Friends</b></h1>
                 <div class="search_container">
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Search..." id= "search_bar" onclick="searchFilter()">
                     <div class="search"></div>
                 </div>
                 <br>
@@ -36,6 +36,12 @@
 </html>
 
 <script>
+    $("#search_bar").keyup(function(event) {
+        if (event.keyCode === 13) {
+            $("#search_bar").click();
+        }
+    });
+
     customSelect("filter-select age");
     customSelect("filter-select city");
     getFriendsList();
@@ -127,5 +133,32 @@
             }
         }
         document.addEventListener("click", closeAllSelect);
+    }
+
+    function searchFilter(){
+        var words = document.getElementById("search_bar").value;
+        console.log(words);
+        if(words){
+            $.ajax({
+                url: '/functions',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({func: 'getMatchingFriends', words: words}),
+                    success: (data) => {
+                        var divlist = document.getElementById("flist");
+                        divlist.innerHTML = '<div class="row-padding" id="flist"></div>';
+                        for(user in data.response){
+                            var imgsrc = data.response[user].img;
+                            var node = `<div class='user_profile'>`;
+                            if(imgsrc){
+                            var node = node + `<img alt='Profile pic' src=${imgsrc}>`;
+                            }
+                            var node = node + `<p><b>Name: ${data.response[user].name}</b></p><p>Real name: ${data.response[user].real_name} </p><p>Location: ${data.response[user].country}</p><p>From: <a target = '_blank' id="account_link" href = ${data.response[user].link}>${data.response[user].from}</a></p></div>`;
+                            $('#flist').append(node);
+                        }
+                    }
+            });
+        }
     }
 </script>

@@ -278,6 +278,26 @@ app.post('/functions',(req,res) => {
                     res.send({"response" : jsonData.users[user].acquaintances});
                 }
             }
+            break;
+        case 'getMatchingFriends':
+            var matching_friends = [];
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == req.session.email){
+                    for(f1 in jsonData.users[user].friends){
+                        for(f2 in jsonData.users[user].friends[f1].friends){
+                            var searchIn1 = jsonData.users[user].friends[f1].friends[f2].name.replace(/\s/g, "").toLowerCase();
+                            var searchIn2 = jsonData.users[user].friends[f1].friends[f2].real_name.replace(/\s/g, "").toLowerCase();
+                            if(searchIn1.includes(req.body.words) == true){
+                                matching_friends.push(jsonData.users[user].friends[f1].friends[f2]);
+                            } else if(searchIn2.includes(req.body.words) == true){
+                                matching_friends.push(jsonData.users[user].friends[f1].friends[f2]);
+                            }
+                        }
+                    }
+                }
+            }
+            res.send({'response': matching_friends});
+            break;
         default:
             console.log('nothing');
     }
