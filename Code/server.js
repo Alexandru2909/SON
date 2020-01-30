@@ -165,17 +165,17 @@ app.post('/functions',(req,res) => {
                 token: req.body.token
             });
              
-            async function run() {
-                const response = await vk.api.friends.get({
-                    owner_id: 580684984,
-                    fields:['nickname','country','city','photo_100']
-                });
-                return response;
-            };
-            run().then((data)=>{
-                var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
-            });
-            res.send(ret);
+            // async function run() {
+            //     const response = await vk.api.friends.get({
+            //         owner_id: 580684984,
+            //         fields:['nickname','country','city','photo_100']
+            //     });
+            //     return response;
+            // };
+            // run().then((data)=>{
+            //     var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
+            // });
+            // res.send(ret);
             break;
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){
@@ -236,30 +236,30 @@ app.post('/functions',(req,res) => {
                     for(fr in user.friends){
                         for(acq in user.friends){
                             if(user.friends[acq].sn != user.friends[fr].sn){
-                                console.log(user.friends[fr].sn, user.friends[acq].sn);
-                                for(f in user.friends[fr].friends){
-                                    // console.log(user.friends[fr].friends[f].name);
-                                    // console.log("____");
-                                    var found = false
-                                    for(a in user.friends[acq].friends){
-                                        if(user.friends[fr].friends[f].real_name){
-                                            if(tools.getRealName(user.friends[acq].friends[a].real_name).localeCompare(tools.getRealName(user.friends[fr].friends[f].real_name)) == 0){
-                                                found = true;
-                                                break;
+                                    console.log(user.friends[fr].sn, user.friends[acq].sn);
+                                    for(f in user.friends[fr].friends){
+                                        // console.log(user.friends[fr].friends[f].name);
+                                        // console.log("____");
+                                        var found = false
+                                        for(a in user.friends[acq].friends){
+                                            if(user.friends[fr].friends[f].real_name){
+                                                if(tools.getRealName(user.friends[acq].friends[a].real_name).localeCompare(tools.getRealName(user.friends[fr].friends[f].real_name)) == 0){
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if(found == false){
+                                            var ret = tools.lookUpUser(jsonData, user.friends[fr].friends[f].name, user.friends[fr].sn, user.friends[acq].sn);
+                                            if(ret){
+                                                var obj = {
+                                                    "acq" : ret[0],
+                                                    "alsoOn" : ret[1]
+                                                }
+                                                acqList.push(obj);
                                             }
                                         }
                                     }
-                                    if(found == false){
-                                        var ret = tools.lookUpUser(jsonData, user.friends[fr].friends[f].name, user.friends[fr].sn, user.friends[acq].sn);
-                                        if(ret){
-                                            var obj = {
-                                                "acq" : ret[0],
-                                                "alsoOn" : ret[1]
-                                            }
-                                            acqList.push(obj);
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
@@ -273,8 +273,11 @@ app.post('/functions',(req,res) => {
 
             break;
         case 'getAcqList':
+            console.log("Apelat");
+            console.log(req.session.email);
             for(user in jsonData.users){
                 if(jsonData.users[user].email == req.session.email){
+                    console.log(jsonData.users[user].acquaintances);
                     res.send({"response" : jsonData.users[user].acquaintances});
                 }
             }

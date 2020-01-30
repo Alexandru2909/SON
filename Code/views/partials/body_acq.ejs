@@ -48,6 +48,8 @@
                 dataType: 'json',
                 data: JSON.stringify({func: 'getAcqList'}),
                 success: (data) => {
+                    console.log("sdkb");
+                    console.log(data.response);
                     var acquaintances = data.response;
                     var name = "";
                     var link = "";
