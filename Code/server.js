@@ -298,6 +298,9 @@ app.post('/functions',(req,res) => {
             }
             res.send({'response': matching_friends});
             break;
+        case 'downloadGraph':
+            
+            break;
         default:
             console.log('nothing');
     }

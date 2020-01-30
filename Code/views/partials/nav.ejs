@@ -10,6 +10,9 @@
     <button onclick="getLinks();">
         <h3>Linked accounts</h3>
     </button>
+    <button onclick="downloadGraph();">
+        <h3>Download network graph</h3>
+    </button>
     <script>
         function getFriends() {
             $.ajax({
@@ -49,6 +52,18 @@
                 }
             });
             window.history.pushState("object or string","Page Title","/links");
+        }
+        function downloadGraph(){
+            $.ajax({
+                url: '/functions',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({func: 'downloadGraph'}),
+                success: (data) => {
+                    $(".main").replaceWith(data.response);
+                }
+            });
         }
         </script>
 </nav>
