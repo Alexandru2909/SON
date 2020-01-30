@@ -28,12 +28,77 @@
             </p>
         </section>
         <section>
+            <h2>Used APIs</h2>
+            <ol>
+                <l1>
+                    <h3>EJS</h3>
+                    <p>EJS stands for Embedded JavaScript templating. We used EJS as a template engine. Our work involved developing the fragments of the pages, for example the header and the nav,
+                        which are the same for all our pages and let the EJS create automatically a new html page with our desired content.
+                    </p>
+                    </l1>
+                <li>
+                    <h3>Express</h3>
+                    <h4>Fast, unopinionated, minimalist web framework for Node.js</h4>
+                    <p>Express was used in our project a lot. We used Express to </p> <ol>
+                        <li>handle the GET and POST requests;</li>
+                        <li>together with the template engine to render pages client-side;</li>
+                        <li>to handle server-side processing calls made by some client interaction;</li>
+                        <li>redirect the anonymous users to the signup page;</li>
+                        <li>consume the POST/GET APIs from other sites;</li>
+                    </ol>
+                </li>
+                <li>
+                    <h3>
+                        Express-session
+                    </h3>
+
+                    <p>By creating a server session for each client,we were able to keep track of the logged-in users and their specific data, when requested.
+                        When an anonymous user is trying to access the site, the page will not be rendered,thanks to express-basic-auth and express-session.
+                    </p>
+                </li>
+                <li>
+                    <h3>LastFMAPI</h3>
+                    <p>
+                        To get authetication tokens and user data, our requests were processed with the help of Last FM API.
+                        The call we used from this api was user.getFriends , which requires as parameters the username and the api_key,
+                        which we got by creating a developer account. The API would return an JSON file containing a detailed list of friends, 
+                        containing information like the realname, an url to the account, images with different sizes, number of subscribers and many others.
+                    </p>
+                    <a href="https://www.last.fm/api/show/user.getFriends">This is the lastfm api site</a>
+                    /<a href="https://www.npmjs.com/package/lastfmapi">This is the node.js package</a>
+                </li>
+                <li>
+                    <h3>Twitter</h3>
+                    <p>
+                        Twitter was a little bit more complicated Social Network that we used, because it requires a lot of steps to get an user
+                        authenticated. Here are some diagrams of the calls we used:
+                        <img src="https://cdn.cms-twdigitalassets.com/content/dam/developer-twitter/icons/auth-4.png.img.fullhd.medium.png" alt="first_request">
+                        <figcaption> First server request </figcaption>
+                        <img src="https://cdn.cms-twdigitalassets.com/content/dam/developer-twitter/icons/auth-3.png.img.fullhd.medium.png" alt="second_request">
+                        <figcaption> Redirecting the user </figcaption>
+                        <img src="https://cdn.cms-twdigitalassets.com/content/dam/developer-twitter/icons/auth-2.png.img.fullhd.medium.png" alt="third_request">
+                        <figcaption> Converting the request token to an access token</figcaption>
+                        The enpoint we used was GET friends/list which would retrieve by an user id a list of user-objects which we needed for all of his friends ( in this case people he follows ), together with a
+                        cursor for large accounts.
+                    </p>
+                    <a href="https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-friends-list">
+                    This is the twitter api site</a>
+                    /<a href="https://www.npmjs.com/package/twitter">This is the node.js package</a>
+                </li>
+                <li>
+                    <h3>vk-io</h3>
+                    <p> Even though the APIs for VKontakte we found were pretty old, this one managed to do the job for us, by making a call to vk.api.friends.get .
+                        The call requested the fields that we requested ( the country, the nickname, the name and surname, plus a photo to be shown on our site ), the id of the user whose friends we were going to receive and the token from our registered application.  </p>
+                        <a href="https://www.npmjs.com/package/vk-io">
+                        This is the node.js pacakge</a>
+                        /<a href="https://vk.com/dev/methods">This is the VK api site</a>
+                    </li>
+            </ol>
             <h2>Application architecture</h2>
             <h3>Goals</h3>
             <p>
-                Our web solution provides a platform for social networking, this means our users will be able to collect profiles from social networking sites like: Instagram, Facebook, Github,..
-                The users' profiles can be searched by multiple criterias, ex: hobbies, geographical areas, name, etc..
-                Also, the network for each user will have the possibility to be exported in a 2D manner as PNG
+                Our web solution provides a platform for social networking, this means that our users will be able to see all of their friends/contacts/followers from different social networks on our site.
+                The users' profiles can be searched by name, and sorted by geographical areas, the network they come from.
             </p>
             <h3>Database</h3>
             <figure typeof="sa:Image">
@@ -41,7 +106,14 @@
                 <figcaption> Database </figcaption>
             </figure>
             <p>
-                The database consists of 3 tables which atomical data.
+                We keep our user records inside a JSON file, having the following fields:email,forename,last name,phone number; pass is the 
+                password we require for our site, this can be established only at the sign in phase; acquaintances
+                is the field to be filled with the user's possible friends. Suppose user A has an account on Twitter, where 
+                he follows user B, and an account on lastfm, where he doesn't follow user B. 
+                If user B has an account on lastfm too, then he will appear in this field of user A as a possible acquaintance;
+                friends field is to be filled with detailed userdata for each friend of our user, on each network
+                next we have the usernames we use to identify the owner of the account, the vars that tell us wether
+                the current user is signed in on one of the apps or not and the date that the user signed in.
             </p>
             <h3>Diagram</h3>
             <figure typeof="sa:Image">
@@ -49,67 +121,95 @@
                 <figcaption> Architecture </figcaption>
             </figure>
             <p>
-                Our app is a single page type.
-                We say this because our goal is to develop an app which loads the user interface dinamically using HTML and CSS templates, managed by JavaScript
+                Our app is a single page type. We say this because, outside of the signup and login page, all the content is 
+                dinamically uploaded into the page with the help of Ajax and JQuery. Through POST requests, the body of the application
+                is taken and inserted into the DOM of the current page, based on the user's interaction with the nav bar.
+                </p>
+                <h3>
+                    JavaScript Details
+                </h3>
+                <p>
+                    To begin with, our package includes 'main.js', a module filled with tools used by the server to manipulate/extract data from the database, such as:
+                    <ul>
+                        <li>adduser(fname,lname,email,phone,psw), which checks if the email already exists into the database
+                            and if it does not, then it creates an user in the database with that email.
+                        </li>
+                        <li>
+                            putuser(network,email,name), which adds the username from the social network to the database
+                        </li>
+                        <li>
+                            getter for friends list,based on the network and email;
+                        </li>
+                        <li>
+                            setters for acquaintances and friends, based on lists of users returned from the APIs;
+                        </li>
+                        <li>
+                            checkUser(email,pass), which return true if such a combination exists in the database
+                        </li>
+                    </ul>
+                    Then there's the folder views, where all the HTML and CSS belongs. The views/partials is the 
+                    place for all the EJS files, our HTML chunks, which together form the pages that the client
+                    interacts with.
+                    views/partials contains head.ejs and nav.ejs, the header and navigation bar that appear on every page.
+                    It also contains sign_up.ejs, the page rendered by the GET request at /signup.
+                    The page login.ejs is rendered at the /login endpoint.
+                    When called,each enpoint of /friends,/acquaintances,/links renders the whole page containing
+                    head,and together with the body of the requested page.
+                    When the user clicks on nav to change page, the page is not rendered again, but instead
+                    the current bady, containing the class 'main' is replaced by the ajax, which 
+                    make a POST request to the server, at the /functions endpoint, with the argument
+                    func: 'getAcqBody'/'getFriendsBody'/'getLinksBody'. The server then returns the computed body,
+                    remaining for the Jquery to only replace it in the current DOM.
+                    The '/functions' endpoint is used for a lot of the client-server interaction,
+                    it's role being to manage data and retrieve client-relevant content from the server,
+                    for example the tokens are used in this communication, because both the client and the server need
+                    it from the other.
+
+                    
+                </p>
                 <h3>4. Application Scenarios</h3>
                 <figure typeof="sa:Image">
                     <img src="Usecase.png" alt="usecase">
                     <figcaption> Usecase Diagram </figcaption>
                 </figure>
                 <p>
-                    <ol>
-                        <li> 
-                            A new user makes an account, logs in and fills in his personal info and his own social networks profile links.
-                        </li>
-                        <li> 
-                            To extend his network, he may recieve a sugestion regarding the possible friends in our app found in another social network.
-                        </li>
-                        <li>
-                            He may modify his own network by:
-                            <ul>
-                                <li>Adding friends</li>
-                                <li>Deleting friends</li>
-                            </ul>
-                        </li>
-                        <li>
-                            The logged user can find other users based on criterias such as name, location, etc..
-                        </li>
-                        <li>
-                            Receive notifications about pending requests for connections. And accept/decline them.
-                        </li>
-                        <li> 
-                            Export his own network as .png file.
-                        </li>
+                    The interaction of a new user with our application will have a flow just like this:
+                    The user will be prompted with the signup page. The user will create a new account, remember the password and login.
+                    After this, he may go to the links page and give our app permission to access his
+                    data. After logging in and giving us the right permissions, he may go to the friends tab 
+                    and observe his whole network of friends/followers/contacts from the sites he signed up on.
+                    He may search a user from our database by name, sort the users by location, or by the site they know
+                    each other from. After this, he may look at the acquaintances tab and see the 'loose points' in his
+                    whole network. From there he cand look at the profiles of his friends from other networks and follow
+                    the link to their account, where they can add them as friends.
+                    For the user to refresh the friends list, he can simply log out and back in to the app. After this a new token
+                    will be generated and the friends list will be imported again.
                     </ol>
         </section>
         <section>
             <h2>Development stages</h2>
             <p>
-                We will go through the following stages:
+                We went through the following stages:
             </p>
             <ol>
                 <li>Establishing the overall look of the site along with the database, functionalities and task
                     management;</li>
-                <li>Prototyping the main page and the templates</li>
                 <li>
-                    Start writing client and server
+                    Checking the internet extensively to see which social networks support our app,
+                    checking how the functionalities may be implemented knowing this information;
+                </li>
+                <li>Prototyping the main page and the templates;</li>
+                <li> Look through the possible node packages we could use and test them</li>
+                <li>Going through turning our static multi-page app to SPA</li>
+                <li>
+                    Start designing server endpoints
                 </li>
                 <li>
-                    Test the outcomes before each push
+                    Defining and testing a way to standardize the data in our database, so we can define
+                    social network-independent ways of displaying it.
                 </li>
-                <li>Implementation of all the components and integration </li>
+                <li>Integration of all components</li>
             </ol>
-            <h3>
-                Storage methods
-            </h3>
-            <ul>
-                <li>
-                    For the code, we will be using Github.
-                </li>
-                <li>
-                    For the database we will be using MySQL API for node.js
-                </li>
-            </ul>
         </section>
     </article>
 </body>

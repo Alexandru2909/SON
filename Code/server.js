@@ -19,7 +19,6 @@ var clientTwitter = new Twitter({
 });
 let jsonData = require('./database.json');
 var tools = require('./main.js');
-const fetch = require('node-fetch');
 const crypto = require('crypto');
 
 
