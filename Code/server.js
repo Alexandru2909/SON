@@ -11,10 +11,10 @@ var lfm = new LastfmAPI({
 });
 var Twitter = require("twitter");
 var clientTwitter = new Twitter({
-    consumer_key : "XGy6COOt115UfbvCC8jvmf0Ng",
-    consumer_secret : "raotGUduELFwJcdmE2c7BXrvR39jA9AHVOYeIlZtqpalDCtcLB",
-    access_token_key: "1178909523689578497-L3NV0l1GFLd0PLo8JfuwYZEgKxamXp",
-    access_token_secret: "Edw5MeJ8A14SrtWm9hY4dCiE8fFA1cPQECHOsQ57q3XY6"
+    consumer_key : "v2MfVjiMjbUms9ClEyMIGOHHv",
+    consumer_secret : "HTioAxwTvQm4sB2R4NDTZP9FdfONFQy5G6pkHCRKcxjv2qsEyD",
+    access_token_key: "1178909523689578497-WIR74Kn0CXyTmt9CoFVZycYw3EZcxL",
+    access_token_secret: "OMOMHX8R01ssN1Y6yDMxvwZgXlCDPCJgbyuO4KzJoC5d1"
 
 });
 let jsonData = require('./database.json');
@@ -25,7 +25,10 @@ const crypto = require('crypto');
 
 app.use(express.static(__dirname + '/views/public'));
 var session = require("express-session")({secret: 'thisismysecret',
-cookie: { maxAge: 8*60*60*1000 },  // 8 hours
+cookie: { 
+    maxAge: 8*60*60*1000,
+    httpOnly: true
+},  // 8 hours
 });
 app.use(session);
 // set the view engine to ejs
@@ -248,6 +251,7 @@ io.on('connection', function (socket) {
         var listOfSN = [];
         for(user in jsonData.users){
             if(jsonData.users[user].email == socket.handshake.session.email){
+                console.log(jsonData.users[user]);
                 if(jsonData.users[user].lastfm_linked == true){
                 listOfSN.push("lastfm");
                 }
@@ -258,8 +262,8 @@ io.on('connection', function (socket) {
                     listOfSN.push("vk");
                 }
             }
-        cb({list:listOfSN});
         }
+        cb({list:listOfSN});
     });
     socket.on('insertUserName',(data,cb)=>{            
         var ret = tools.putuser(jsonData,data.sn,socket.handshake.session.email,data.user);
@@ -332,7 +336,7 @@ io.on('connection', function (socket) {
             if ( err) throw err;
         });
         cb(true);
-    })
+    })   
     socket.on('requestTokenTwitter',(cb)=>{
         clientTwitter.post("https://api.twitter.com/oauth/request_token", { oauth_callback: "http://www.localhost:3000/links?sn=twitter" }, function(err, response) {
             var string = response.split("&")
@@ -343,7 +347,10 @@ io.on('connection', function (socket) {
                 var oauth_token = string[0][1]
                 var oauth_token_secret = string[1][1]
             }
-           cb({token: oauth_token, secret: oauth_token_secret});
+            
+            let site = "https://api.twitter.com/oauth/authenticate?oauth_token=" + oauth_token;
+            
+            cb({token: oauth_token, secret: oauth_token_secret, site: site});
         })
         
     })

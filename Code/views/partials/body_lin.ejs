@@ -81,20 +81,20 @@
     function updateLinks(){
         socket.emit('updateLinks',function(data){
             for(sn in data.list){
-                        console.log(data.list[sn]);
-                        if(data.list[sn] == "lastfm"){
-                            var lastfm_checkbox = document.getElementById('lfm');
-                            lastfm_checkbox.checked = true;
-                        }
-                        if(data.list[sn] == "twitter"){
-                            var twitter_checkbox = document.getElementById("twitter");
-                            twitter_checkbox.checked = true;
-                        }
-                        if(data.list[sn] == "vk"){
-                            var lastfm_checkbox = document.getElementById('VK');
-                            lastfm_checkbox.checked = true;
-                        }
-                    }
+                console.log(data.list[sn]);
+                if(data.list[sn] == "lastfm"){
+                    var lastfm_checkbox = document.getElementById('lfm');
+                    lastfm_checkbox.checked = true;
+                }
+                if(data.list[sn] == "twitter"){
+                    var twitter_checkbox = document.getElementById("twitter");
+                    twitter_checkbox.checked = true;
+                }
+                if(data.list[sn] == "vk"){
+                    var lastfm_checkbox = document.getElementById('VK');
+                    lastfm_checkbox.checked = true;
+                }
+            }
         })
     }
 
@@ -160,8 +160,9 @@
         var checkbox = document.getElementById("twitter");
         if(checkbox.checked){
             socket.emit('requestTokenTwitter',function(data){
-                var authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + data.token;
-                window.location = authUrl;
+                // var authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + data.token;
+                // window.location = authUrl;
+                window.location = data.site;
             })
         } else {
             socket.emit('twitterOut',function(data){
