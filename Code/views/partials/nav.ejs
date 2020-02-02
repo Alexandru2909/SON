@@ -14,56 +14,29 @@
         <h3>Download network graph</h3>
     </button>
     <script>
+        var socket = io.connect('http://localhost');
         function getFriends() {
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'getFriendsBody'}),
-                success: (data) => {
-                    $(".main").replaceWith(data.response);
-                }
-            });
-            window.history.pushState("object or string","Page Title","/friends");
+        socket.emit('getFriendsBody',function(data){
+            $(".main").replaceWith(data.response);
+        });
+        window.history.pushState("object or string","Page Title","/friends");
         }
         function getAcquaintances() {
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'getAcqBody'}),
-                success: (data) => {
-                    $(".main").replaceWith(data.response);
-                }
-            });
+            socket.emit('getAcqBody',function(data){
+                $(".main").replaceWith(data.response);
+            })
             window.history.pushState("object or string","Page Title","/acquaintances");
         }
         function getLinks() {
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'getLinksBody'}),
-                success: (data) => {
-                    $(".main").replaceWith(data.response);
-                }
-            });
+            socket.emit('getLinksBody',function(data){
+                $(".main").replaceWith(data.response);
+            })
             window.history.pushState("object or string","Page Title","/links");
         }
         function downloadGraph(){
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'downloadGraph'}),
-                success: (data) => {
-                    $(".main").replaceWith(data.response);
-                }
-            });
+            socket.emit('downloadGraph',function(data){
+                $(".main").replaceWith(data.response);
+            })
         }
         </script>
 </nav>

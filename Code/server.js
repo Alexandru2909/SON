@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var session = require('express-session')
+var sharedsession = require("express-socket.io-session");
 var fs = require('fs');
 var request = require('request');
 var LastfmAPI = require("lastfmapi");
@@ -22,10 +22,12 @@ var tools = require('./main.js');
 const crypto = require('crypto');
 
 
+
 app.use(express.static(__dirname + '/views/public'));
-app.use(session({secret: 'thisismysecret',
+var session = require("express-session")({secret: 'thisismysecret',
 cookie: { maxAge: 8*60*60*1000 },  // 8 hours
-}));
+});
+app.use(session);
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -60,6 +62,317 @@ app.get('/login', function(req, res){
     res.render('partials/login');
 });
 
+
+//SOCKET CODe
+var io = require('socket.io')(80);
+io.use(sharedsession(session));
+io.on('connection', function (socket) {
+    // Accept a login event with user's data
+    socket.on("checkUser", function(body,cb) {
+        var ret = tools.checkUser(jsonData,body.email,body.pass);
+        if (ret == true){
+            socket.handshake.session.email = body.email;
+            socket.handshake.session.save();
+        }
+        cb(ret);
+    });
+    //ADDED FROM EXAMPLE
+    socket.on("logout", function(userdata) {
+        if (socket.handshake.session.userdata) {
+            delete socket.handshake.session.userdata;
+            socket.handshake.session.save();
+        }
+    });  
+    socket.on('getFriends',(data,cb)=>{
+        var list = tools.getFriends(jsonData, socket.handshake.session.email, data.network);
+        cb({'response': list});
+    })
+    socket.on('adduserToDB',(data,cb)=>{
+        var ret = tools.adduser(jsonData,data.fname,data.lname,data.email,data.phone,data.pass);
+        if (ret == true){
+            socket.handshake.session.email = data.email;
+            socket.handshake.session.save();
+            let x = JSON.stringify(jsonData);
+            fs.writeFile('database.json',x,(err)=>{
+                if ( err) throw err;
+            });
+        }
+        cb(ret);
+    })
+    socket.on('getAcqList',(cb)=>{
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email)
+                // console.log(jsonData.users[user].acquaintances);
+                cb({"response" : jsonData.users[user].acquaintances});
+        }
+    })
+    socket.on('getMatchingFriends',(data,cb)=>{
+        var matching_friends = [];
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                for(f1 in jsonData.users[user].friends){
+                    for(f2 in jsonData.users[user].friends[f1].friends){
+                        var searchIn1 = jsonData.users[user].friends[f1].friends[f2].name.replace(/\s/g, "").toLowerCase();
+                        var searchIn2 = jsonData.users[user].friends[f1].friends[f2].real_name.replace(/\s/g, "").toLowerCase();
+                        if(searchIn1.includes(data.words) == true){
+                            matching_friends.push(jsonData.users[user].friends[f1].friends[f2]);
+                        } else if(searchIn2.includes(data.words) == true){
+                            matching_friends.push(jsonData.users[user].friends[f1].friends[f2]);
+                        }
+                    }
+                }
+            }
+        }
+        cb({'response': matching_friends});
+    })
+    socket.on('getFriendsBody',(cb)=>{
+        var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_fri.ejs','utf8'));
+        cb({'response': cnt});
+    })
+    socket.on('getAcqBody',(cb)=>{
+        var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_acq.ejs','utf8'));
+        cb({'response': cnt});
+    })
+    socket.on('getLinksBody',(cb)=>{
+        var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
+        cb({'response': cnt});
+    })
+    socket.on('downloadGraph',(cb)=>{
+        var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
+        cb({'response': cnt});
+    })
+    socket.on('addAcq',(cb)=>{
+        var acqList = []
+        for(u in jsonData.users){
+            if(jsonData.users[u].email == socket.handshake.session.email){
+                var user = jsonData.users[u];
+                for(fr in user.friends){
+                    for(acq in user.friends){
+                        if(user.friends[acq].sn != user.friends[fr].sn){
+                                for(f in user.friends[fr].friends){
+                                    // console.log(user.friends[fr].friends[f].name);
+                                    // console.log("____");
+                                    var found = false
+                                    for(a in user.friends[acq].friends){
+                                        if(user.friends[fr].friends[f].real_name){
+                                            if(tools.getRealName(user.friends[acq].friends[a].real_name).localeCompare(tools.getRealName(user.friends[fr].friends[f].real_name)) == 0){
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if(found == false){
+                                        var ret = tools.lookUpUser(jsonData, user.friends[fr].friends[f].name, user.friends[fr].sn, user.friends[acq].sn);
+                                        if(ret){
+                                            var obj = {
+                                                "acq" : ret[0],
+                                                "alsoOn" : ret[1]
+                                            }
+                                            acqList.push(obj);
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                }
+                jsonData.users[u].acquaintances = acqList;
+                fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+                    if ( err) throw err;
+                });
+            }
+        }
+
+        cb({'response': null});
+    })
+    socket.on('toggleLink',(data,cb)=>{
+        if(data.social_network == "lastfm"){
+            for(user in jsonData.users){
+                if(jsonData.users[user].email == socket.handshake.session.email){
+                    jsonData.users[user].lastfm_linked = true
+                    fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                        if(err){ throw err;}
+                    })
+                }
+            }
+        }
+        if(data.social_network == "twitter"){
+            request.post("https://api.twitter.com/oauth/access_token?oauth_token=" + data.user_token + "&oauth_verifier=" + data.verifier, function(err, res, body){
+                var string = res.body.split("&")
+                for (var i = 0; i < string.length; i++) {
+                    string[i] = string[i].split("=")
+                }
+                var screen_name = string[3][1];
+                for(user in jsonData.users){
+                    if(jsonData.users[user].email == socket.handshake.session.email){
+                        jsonData.users[user].twitter_linked = true;
+                        jsonData.users[user].twitter_username = screen_name;
+                        fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                            if(err){ throw err;}
+                        })
+                        break;
+                    }
+                }
+            });
+        }
+    cb({'response': true});
+});
+    socket.on('addVKToken',(data,cb)=>{
+        const vk = new vk_api.VK({
+            token: data.token
+        });
+         
+        async function run() {
+            const response = await vk.api.friends.get({
+                owner_id: data.user_id,
+                fields:['nickname','country','city','photo_100']
+            });
+            console.log(response);
+            return response;
+        };
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                jsonData.users[user].vk_linked = true;
+                jsonData.users[user].vk_username = data.user_id;
+                fs.writeFile('database.json', JSON.stringify(jsonData), (err) => {
+                    if(err){ throw err;}
+                })
+                break;
+            }
+        }
+        run().then((data1)=>{
+            var ret = tools.addFriend(jsonData,socket.handshake.session.email,data1.items,'vk');
+            cb(ret)
+        });
+    })
+    socket.on('updateLinks',(cb)=>{
+        var listOfSN = [];
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                if(jsonData.users[user].lastfm_linked == true){
+                listOfSN.push("lastfm");
+                }
+                if(jsonData.users[user].twitter_linked == true){
+                    listOfSN.push("twitter");
+                }
+                if(jsonData.users[user].vk_linked == true){
+                    listOfSN.push("vk");
+                }
+            }
+        cb({list:listOfSN});
+        }
+    });
+    socket.on('insertUserName',(data,cb)=>{            
+        var ret = tools.putuser(jsonData,data.sn,socket.handshake.session.email,data.user);
+        switch(data.sn){
+            case 'lastfm':
+                socket.handshake.session.lastfm_user = data.user;
+                cb(ret);
+                var username = socket.handshake.session.lastfm_user;
+                lfm.user.getFriends({
+                    'user':username
+                }, function(err, friends){
+                    if(err){
+                        throw err;
+                    }
+                    tools.addFriend(jsonData, socket.handshake.session.email, friends, "lastfm");
+                });
+                break;
+            case 'vk':
+                socket.handshake.session.vk_user = data.user;
+                cb(ret);
+        }
+       
+
+        // clientTwitter.get('friends/list', function(err, data){
+        //     if(err){
+        //         throw err;
+        //     }
+
+        //     for(var user in data.users){
+        //         tools.addFriend(jsonData, req.session.email, data.users[user].id, "twitter");
+        //     }
+        // });
+
+    });
+    socket.on('vkOut',(cb)=>{
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                jsonData.users[user].vk_username = "";
+                jsonData.users[user].vk_linked = false;
+                for(f in jsonData.users[user].friends){
+                    if(jsonData.users[user].friends[f].sn == "vk"){
+                        jsonData.users[user].friends[f].friends = [];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+            if ( err) throw err;
+        });
+        cb(true);
+
+    })
+    socket.on('lastfmOut',(cb)=>{
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                jsonData.users[user].lastfm_username = "";
+                jsonData.users[user].lastfm_linked = false;
+                for(f in jsonData.users[user].friends){
+                    if(jsonData.users[user].friends[f].sn == "lastfm"){
+                        jsonData.users[user].friends[f].friends = [];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+            if ( err) throw err;
+        });
+        cb(true);
+    })
+    socket.on('requestTokenTwitter',(cb)=>{
+        clientTwitter.post("https://api.twitter.com/oauth/request_token", { oauth_callback: "http://www.localhost:3000/links?sn=twitter" }, function(err, response) {
+            var string = response.split("&")
+            for (var i = 0; i < string.length; i++) {
+                string[i] = string[i].split("=")
+            }
+            if (string[2][1] == "true") {
+                var oauth_token = string[0][1]
+                var oauth_token_secret = string[1][1]
+            }
+           cb({token: oauth_token, secret: oauth_token_secret});
+        })
+        
+    })
+    socket.on('twitterOut',(cb)=>{
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                jsonData.users[user].twitter_username = "";
+                jsonData.users[user].twitter_linked = false;
+                for(f in jsonData.users[user].friends){
+                    if(jsonData.users[user].friends[f].sn == "twitter"){
+                        jsonData.users[user].friends[f].friends = [];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
+            if ( err) throw err;
+        });
+        cb(true);
+
+    })
+
+});
+
+
+//END
+
 //to parse arguments coming from json
 app.use(express.json());
 
@@ -68,7 +381,7 @@ app.post('/functions',(req,res) => {
     // console.log(jsonData);
     switch(req.body.func){
         case 'getFriends1':
-            
+            //DONE
             var list = tools.getFriends(jsonData, req.session.email, req.body.network);
             res.send({'response': list});
             break;
@@ -163,17 +476,17 @@ app.post('/functions',(req,res) => {
                 token: req.body.token
             });
              
-            // async function run() {
-            //     const response = await vk.api.friends.get({
-            //         owner_id: 580684984,
-            //         fields:['nickname','country','city','photo_100']
-            //     });
-            //     return response;
-            // };
-            // run().then((data)=>{
-            //     var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
-            // });
-            // res.send(ret);
+            async function run() {
+                const response = await vk.api.friends.get({
+                    owner_id: 580684984,
+                    fields:['nickname','country','city','photo_100']
+                });
+                return response;
+            };
+            run().then((data)=>{
+                var ret = tools.addFriend(jsonData,req.session.email,data.items,'vk');
+            });
+            res.send(ret);
             break;
         case 'toggleLink':     
             if(req.body.social_network == "lastfm"){

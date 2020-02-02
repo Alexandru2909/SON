@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js">
+    </script>
     <style>
         body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </style>
@@ -53,6 +55,7 @@
 </body>
 
 <script>
+    var socket = io.connect('http://localhost');
     function addUserToDB(){
         var fname = document.getElementById('fname').value;
         var lname = document.getElementById('lname').value;
@@ -64,20 +67,12 @@
         var email_alert = document.getElementById('email-alert');
         
         if(psw.localeCompare(psw_repeat) == 0){
-            var json = {'func': 'adduserToDB','email': email,'fname':fname,'lname':lname,'phone':phone,'pass':psw};
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(json),
-                success: function(msg, status, jqXHR) {
-                    var response = msg;
-                    if(msg == true){
-                        window.location.href = "http://localhost:3000/friends";
-                    } else {
-                        email_alert.innerHTML = "Email already in use.";  
-                    }
+            var json = {'email': email,'fname':fname,'lname':lname,'phone':phone,'pass':psw};
+            socket.emit('adduserToDB',json,function(data){
+                if(data == true){
+                    window.location.href = "http://localhost:3000/friends";
+                } else {
+                    email_alert.innerHTML = "Email already in use.";  
                 }
             });
         } else {

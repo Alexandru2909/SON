@@ -49,100 +49,53 @@
     </div>
 </html>
 <script>
+    var socket = io.connect('http://localhost');
     redirectProcess();
     updateLinks();
     function redirectProcess(){
         var url = window.location.href;
         url = new URL(url);
         var sn = url.searchParams.get("sn");
-        $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'addAcq'}),
-                success: (data) => {
-                }
-            });
+        socket.emit('addAcq',function(data){})
         switch(sn){
             case 'lastfm':
             var token = url.searchParams.get("token");
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: token}),
-                success: (data) => {
-                }
-            });
+            socket.emit('toggleLink',{social_network: sn, user_token: token},function(data){})
             break;
             case 'twitter':
                 var oauth_token = url.searchParams.get("oauth_token");
                 var oauth_verifier = url.searchParams.get("oauth_verifier");
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: oauth_token, verifier: oauth_verifier}),
-                    success: (data) => {
-                        if(data){
-                            let checkbox = document.getElementById("twitter");
-                            checkbox.checked = true;
-                            $.ajax({
-                                url: '/functions',
-                                type: 'POST',
-                                contentType: 'application/json',
-                                dataType: 'json',
-                                data: JSON.stringify({func: 'insertTwitterFriends'}),
-                                success: (data) => {
-                                }
-                            });
-                        }
-                    }
-                });
+                socket.emit('toggleLink',{social_network: sn, user_token: oauth_token, verifier: oauth_verifier},function(data){})
                 break;
             case 'vk':
                 var hashes = location.hash.split('&');
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func: 'addVKToken', token: hashes[0].split('=')[1], user_id: hashes[2].split('=')[1]}),
-                    success: (data) => {
-                    }
-                });
+                var json = {token: hashes[0].split('=')[1], user_id: hashes[2].split('=')[1]};
+                console.log(json)
+                socket.emit('addVKToken',json,function(data){
+                    console.log(data)
+                })
                 break;
         }
     }
 
     function updateLinks(){
-        $.ajax({
-            url: '/functions',
-            type: 'POST',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify({func: 'updateLinks'}),
-            success: function(msg, status, jqXHR) {
-                    for(sn in msg.list){
-                        console.log(msg.list[sn]);
-                        if(msg.list[sn] == "lastfm"){
+        socket.emit('updateLinks',function(data){
+            for(sn in data.list){
+                        console.log(data.list[sn]);
+                        if(data.list[sn] == "lastfm"){
                             var lastfm_checkbox = document.getElementById('lfm');
                             lastfm_checkbox.checked = true;
                         }
-                        if(msg.list[sn] == "twitter"){
+                        if(data.list[sn] == "twitter"){
                             var twitter_checkbox = document.getElementById("twitter");
                             twitter_checkbox.checked = true;
                         }
-                        if(msg.list[sn] == "vk"){
+                        if(data.list[sn] == "vk"){
                             var lastfm_checkbox = document.getElementById('VK');
                             lastfm_checkbox.checked = true;
                         }
                     }
-                }
-        });
+        })
     }
 
     function connlinkedin(){
@@ -157,34 +110,19 @@
             checkbox.checked = false;
         } else{
             if(checkbox.checked){
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func:'insertUserName',sn:'vk',user:vk1.value}),
-                    success: (data) => {
-                        console.log('data');
+                socket.emit('insertUserName',{sn:'vk',user:vk1.value},function(data){console.log('data');
                         if (data==true)
                             console.log("username inserted for VK");
                         else
                             console.log("username failed for VK");
                         window.location="https://oauth.vk.com/authorize?client_id=7299886&display=page&redirect_uri=http://localhost:3000/links?sn=vk&scope=friends&response_type=token&v=5.103";
-                    }
-                });
+                    })
             } else {
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func:'vkOut'}),
-                    success: (data) => {
-                        if(data){
+                socket.emit('vkOut',function(data){
+                    if(data){
                             redirectProcess();
                         }
-                    }
-                });
+                })
             }
 
         }
@@ -199,66 +137,38 @@
                 lastfmName.setAttribute("style", "border-color: red;")
                 checkbox.checked = false;
             } else {
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func:'insertUserName',sn:'lastfm',user:lastfmName.value}),
-                    success: (data) => {
-                        console.log('data');
-                        if (data==true)
-                            console.log("username inserted for LASTFM");
-                        else
-                            console.log("username failed for LASTFM");
-                        var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
-                        window.location = authUrl;
-                    }
-                });
+                socket.emit('insertUserName',{sn:'lastfm',user:lastfmName.value},function(data){
+                    // console.log('data');
+                    if (data==true)
+                        console.log("username inserted for LASTFM");
+                    else
+                        console.log("username failed for LASTFM");
+                    var authUrl = "http://www.last.fm/api/auth/?api_key=a0a04802c25d3f828bf43e8c54e50ed8&cb=http://localhost:3000/links?sn=lastfm"
+                    window.location = authUrl;
+                })
             }
         } else{
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func:'lastfmOut'}),
-                success: (data) => {
-                    if(data){
+            socket.emit('lastfmOut',function(data){
+                if(data){
                         redirectProcess();
                     }
-                }
-            });
+            })
         }
     }
 
     function connTwitter(){
         var checkbox = document.getElementById("twitter");
         if(checkbox.checked){
-            $.ajax({
-                url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func:'requestTokenTwitter'}),
-                    success: (data) => {       
-                        var authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + data.token;
-                        window.location = authUrl;
-                    }
-            });
+            socket.emit('requestTokenTwitter',function(data){
+                var authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + data.token;
+                window.location = authUrl;
+            })
         } else {
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func:'twitterOut'}),
-                    success: (data) => {
-                        if(data){
-                            redirectProcess();
-                        }
-                    }
-                });
-            }
+            socket.emit('twitterOut',function(data){
+                if(data){
+                    redirectProcess();
+                }
+            })
+        }
     }
 </script>

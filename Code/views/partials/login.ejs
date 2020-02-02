@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js">
+    </script>
     <style>
         body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </style>
@@ -34,24 +36,18 @@
 </body>
 
 <script>
+    var socket = io.connect('http://localhost');
     function addUserToDB(){
         var email = document.getElementById('email').value;
         var psw = document.getElementById('psw').value;
         var email_alert = document.getElementById('email-alert');
-        var json = {'func': 'checkUser','email': email,'pass':psw};
-        $.ajax({
-            url: '/functions',
-            type: 'POST',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(json),
-            success: function(msg, status, jqXHR) {
-                var response = msg;
-                if(msg == true){
-                    window.location.href = "http://localhost:3000/friends";
-                } else {
-                    email_alert.innerHTML = "Try again,wrong password/email";  
-                }
+        var json = {'email': email,'pass':psw};
+        socket.emit('checkUser', json,function(data){
+            var response = data;
+            if(data == true){
+                window.location.href = "http://localhost:3000/friends";
+            } else {
+                email_alert.innerHTML = "Try again,wrong password/email";  
             }
         });
     }

@@ -31,6 +31,7 @@
 </html>
 
 <script>
+    var socket = io.connect('http://localhost');
     $("#search_bar").keyup(function(event) {
         if (event.keyCode === 13) {
             $("#search_bar").click();
@@ -41,23 +42,18 @@
     function getFriendsList(){
         networks = ['lastfm', 'twitter','vk'];
         for ( var net in networks){
-            $.ajax({
-                url: '/functions',
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({func: 'getFriends1',network: networks[net]}),
-                success: (data) => {
-                    for(user in data.response){
-                            var imgsrc = data.response[user].img;
-                            var node = `<div class='user_profile'>`;
-                            var node = node + `<img alt='Profile pic' src=${imgsrc}>`;
-                            var node = node + `<p><b>Name: ${data.response[user].name}</b></p><p>Real name: ${data.response[user].real_name} </p><p>Location: ${data.response[user].country}</p><p>From: <a target = '_blank' id="account_link" href = ${data.response[user].link}>${data.response[user].from}</a></p></div>`;
-                            // console.log(node);
-                            $('#flist').append(node);
-                    }
-                }
+            socket.emit('getFriends', {network: networks[net]},function(data){
+                for(user in data.response){
+                        var imgsrc = data.response[user].img;
+                        var node = `<div class='user_profile'>`;
+                        var node = node + `<img alt='Profile pic' src=${imgsrc}>`;
+                        var node = node + `<p><b>Name: ${data.response[user].name}</b></p><p>Real name: ${data.response[user].real_name} </p><p>Location: ${data.response[user].country}</p><p>From: <a target = '_blank' id="account_link" href = ${data.response[user].link}>${data.response[user].from}</a></p></div>`;
+                        // console.log(node);
+                        $('#flist').append(node);
+                        }
+                // console.log(data,'XXXX');
             });
+            console.log('HI');
         }
         return 'DONE';
     }
@@ -97,31 +93,22 @@
         biglist.replaceWith(newlist);
     };
 
-
-
     function searchFilter(){
         var words = document.getElementById("search_bar").value;
         console.log(words);
         if(words){
-            $.ajax({
-                url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func: 'getMatchingFriends', words: words}),
-                    success: (data) => {
-                        var divlist = document.getElementById("flist");
-                        divlist.innerHTML = '<div class="row-padding" id="flist"></div>';
-                        for(user in data.response){
-                            var imgsrc = data.response[user].img;
-                            var node = `<div class='user_profile'>`;
-                            if(imgsrc){
-                            var node = node + `<img alt='Profile pic' src=${imgsrc}>`;
-                            }
-                            var node = node + `<p><b>Name: ${data.response[user].name}</b></p><p>Real name: ${data.response[user].real_name} </p><p>Location: ${data.response[user].country}</p><p>From: <a target = '_blank' id="account_link" href = ${data.response[user].link}>${data.response[user].from}</a></p></div>`;
-                            $('#flist').append(node);
-                        }
+            socket.emit('getMatchingFriends',{words: words},function(data){
+                var divlist = document.getElementById("flist");
+                divlist.innerHTML = '<div class="row-padding" id="flist"></div>';
+                for(user in data.response){
+                    var imgsrc = data.response[user].img;
+                    var node = `<div class='user_profile'>`;
+                    if(imgsrc){
+                    var node = node + `<img alt='Profile pic' src=${imgsrc}>`;
                     }
+                    var node = node + `<p><b>Name: ${data.response[user].name}</b></p><p>Real name: ${data.response[user].real_name} </p><p>Location: ${data.response[user].country}</p><p>From: <a target = '_blank' id="account_link" href = ${data.response[user].link}>${data.response[user].from}</a></p></div>`;
+                    $('#flist').append(node);
+                }
             });
         }
     }
