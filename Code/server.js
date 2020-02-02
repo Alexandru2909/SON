@@ -23,7 +23,9 @@ const crypto = require('crypto');
 
 
 app.use(express.static(__dirname + '/views/public'));
-app.use(session({secret: 'thisismysecret'}));
+app.use(session({secret: 'thisismysecret',
+cookie: { maxAge: 8*60*60*1000 },  // 8 hours
+}));
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -96,7 +98,9 @@ app.post('/functions',(req,res) => {
         case 'checkUser':
             var ret = tools.checkUser(jsonData,req.body.email,req.body.pass);
             if (ret == true){
+                console.log("set user");
                 req.session.email = req.body.email;
+                console.log(req.session.email);
             }
             res.send(ret);
             break;
@@ -139,7 +143,6 @@ app.post('/functions',(req,res) => {
                 for (var i = 0; i < string.length; i++) {
                     string[i] = string[i].split("=")
                 }
-                console.log(string);
                 if (string[2][1] == "true") {
                     var oauth_token = string[0][1]
                     var oauth_token_secret = string[1][1]
@@ -154,7 +157,6 @@ app.post('/functions',(req,res) => {
 
                     clientTwitter.get("friends/list", { count: 100, screen_name: username, skip_status: "true" }, function(err, res) {
                         var friends = JSON.parse(JSON.stringify(res))["users"]
-                        console.log(friends);
                         tools.addFriend(jsonData, req.session.email, friends, "twitter");
                     });
                 }
@@ -235,7 +237,6 @@ app.post('/functions',(req,res) => {
                     for(fr in user.friends){
                         for(acq in user.friends){
                             if(user.friends[acq].sn != user.friends[fr].sn){
-                                    console.log(user.friends[fr].sn, user.friends[acq].sn);
                                     for(f in user.friends[fr].friends){
                                         // console.log(user.friends[fr].friends[f].name);
                                         // console.log("____");
@@ -263,7 +264,6 @@ app.post('/functions',(req,res) => {
                         }
                     }
                     jsonData.users[u].acquaintances = acqList;
-                    console.log(acqList);
                     fs.writeFile('database.json',JSON.stringify(jsonData),(err)=>{
                         if ( err) throw err;
                     });
@@ -272,8 +272,8 @@ app.post('/functions',(req,res) => {
 
             break;
         case 'getAcqList':
-            console.log("Apelat");
-            console.log(req.session.email);
+            // console.log("Apelat");
+            // console.log(req.session.email);
             for(user in jsonData.users){
                 if(jsonData.users[user].email == req.session.email){
                     console.log(jsonData.users[user].acquaintances);

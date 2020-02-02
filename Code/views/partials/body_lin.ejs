@@ -87,6 +87,10 @@
                     dataType: 'json',
                     data: JSON.stringify({func: 'toggleLink', social_network: sn, user_token: oauth_token, verifier: oauth_verifier}),
                     success: (data) => {
+                        if(data){
+                            let checkbox = document.getElementById("twitter");
+                            checkbox.checked = true;
+                        }
                     }
                 });
                 $.ajax({

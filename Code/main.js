@@ -82,6 +82,7 @@ module.exports = {
         return false;
     },
     checkAuth:function(req,res,next){
+        console.log(req.session.email)
         if(!req.session.email){
             res.redirect('/signup');
         } else { 
@@ -126,7 +127,7 @@ module.exports = {
                                     'from' : "LastFM",
                                     'link' : 'https://www.last.fm/user/' + friends.user[index].name
                                 }
-                                console.log(obj);
+                                // console.log(obj);
                                 new_friends_list.push(obj);
                             }
                         }
@@ -156,7 +157,7 @@ module.exports = {
                                     'from' : "Twitter",
                                     'link' : 'https://twitter.com/' + friends[index].screen_name
                                 };
-                                console.log(obj);
+                                // console.log(obj);
                                 new_friends_list.push(obj);
                             }
                             jsonData.users[user].friends[net].friends=new_friends_list;
