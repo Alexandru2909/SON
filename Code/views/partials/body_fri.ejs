@@ -59,6 +59,7 @@
                 }
             });
         }
+        return 'DONE';
     }
 
     function sortLoc(dir){
@@ -81,17 +82,19 @@
         });
     };
     function sortSN(){
+        var y = getFriendsList();
+        console.log('HI')
         var biglist = $('.row-padding');
         var mylist = $('.row-padding > .user_profile');
-        var x=document.getElementById("snSel")
-        var newlist
-        sn = x.value;
-        console.log(sn);
+        var x=$('#snSel').val()
+        var newlist =[];
         $.each(mylist, function(index, item) {
-            if($(item).children('p').get(3).textContent == ('FROM: ' + sn.value))
-                newlist.append(item); 
+            console.log($(item).children('p').get(3).textContent,('From: ' + x))
+            if($(item).children('p').get(3).textContent == ('From: ' + x))
+                newlist.push(item); 
         });
-        biglist=newlist
+        console.log(newlist);
+        biglist.replaceWith(newlist);
     };
 
 
