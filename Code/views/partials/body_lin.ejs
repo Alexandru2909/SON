@@ -90,16 +90,16 @@
                         if(data){
                             let checkbox = document.getElementById("twitter");
                             checkbox.checked = true;
+                            $.ajax({
+                                url: '/functions',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                dataType: 'json',
+                                data: JSON.stringify({func: 'insertTwitterFriends'}),
+                                success: (data) => {
+                                }
+                            });
                         }
-                    }
-                });
-                $.ajax({
-                    url: '/functions',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify({func: 'insertTwitterFriends'}),
-                    success: (data) => {
                     }
                 });
                 break;

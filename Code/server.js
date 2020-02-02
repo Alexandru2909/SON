@@ -98,9 +98,7 @@ app.post('/functions',(req,res) => {
         case 'checkUser':
             var ret = tools.checkUser(jsonData,req.body.email,req.body.pass);
             if (ret == true){
-                console.log("set user");
                 req.session.email = req.body.email;
-                console.log(req.session.email);
             }
             res.send(ret);
             break;
@@ -154,7 +152,6 @@ app.post('/functions',(req,res) => {
             for(user in jsonData.users){
                 if(jsonData.users[user].email == req.session.email){
                     var username = jsonData.users[user].twitter_username;
-
                     clientTwitter.get("friends/list", { count: 100, screen_name: username, skip_status: "true" }, function(err, res) {
                         var friends = JSON.parse(JSON.stringify(res))["users"]
                         tools.addFriend(jsonData, req.session.email, friends, "twitter");
