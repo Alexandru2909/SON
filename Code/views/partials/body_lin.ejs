@@ -59,9 +59,9 @@
         socket.emit('addAcq',function(data){})
         switch(sn){
             case 'lastfm':
-            var token = url.searchParams.get("token");
-            socket.emit('toggleLink',{social_network: sn, user_token: token},function(data){})
-            break;
+                var token = url.searchParams.get("token");
+                socket.emit('toggleLink',{social_network: sn, user_token: token},function(data){})
+                break;
             case 'twitter':
                 var oauth_token = url.searchParams.get("oauth_token");
                 var oauth_verifier = url.searchParams.get("oauth_verifier");
@@ -85,14 +85,20 @@
                 if(data.list[sn] == "lastfm"){
                     var lastfm_checkbox = document.getElementById('lfm');
                     lastfm_checkbox.checked = true;
+                    var lastfm_input = document.getElementById("lastfm_username");
+                    lastfm_input.value = data.list_un[sn];
                 }
                 if(data.list[sn] == "twitter"){
                     var twitter_checkbox = document.getElementById("twitter");
                     twitter_checkbox.checked = true;
+                    var twitter_input = document.getElementById("twitter_username");
+                    twitter_input.value = data.list_un[sn];
                 }
                 if(data.list[sn] == "vk"){
                     var lastfm_checkbox = document.getElementById('VK');
                     lastfm_checkbox.checked = true;
+                    var vk_input = document.getElementById("vk_username");
+                    vk_input.value = data.list_un[sn];
                 }
             }
         })

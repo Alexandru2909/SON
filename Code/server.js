@@ -24,11 +24,13 @@ const crypto = require('crypto');
 
 
 app.use(express.static(__dirname + '/views/public'));
-var session = require("express-session")({secret: 'thisismysecret',
-cookie: { 
-    maxAge: 8*60*60*1000,
-    httpOnly: true
-},  // 8 hours
+var session = require("express-session")({
+    secret: 'thisismysecret',
+    cookie: { 
+        maxAge: 8 * 60 * 60 * 1000,
+        httpOnly: true
+    },
+    key: 'cookie.sid'
 });
 app.use(session);
 // set the view engine to ejs
@@ -66,6 +68,7 @@ app.get('/login', function(req, res){
 });
 
 
+
 //SOCKET CODe
 var io = require('socket.io')(80);
 io.use(sharedsession(session));
@@ -76,7 +79,9 @@ io.on('connection', function (socket) {
         if (ret == true){
             socket.handshake.session.email = body.email;
             socket.handshake.session.save();
+            // ret = socket.handshake.session.id;
         }
+        // console.log(link);
         cb(ret);
     });
     //ADDED FROM EXAMPLE
@@ -249,21 +254,25 @@ io.on('connection', function (socket) {
     })
     socket.on('updateLinks',(cb)=>{
         var listOfSN = [];
+        var listOfNames = [];
         for(user in jsonData.users){
             if(jsonData.users[user].email == socket.handshake.session.email){
                 console.log(jsonData.users[user]);
                 if(jsonData.users[user].lastfm_linked == true){
                 listOfSN.push("lastfm");
+                listOfNames.push(jsonData.users[user].lastfm_username);
                 }
                 if(jsonData.users[user].twitter_linked == true){
                     listOfSN.push("twitter");
+                    listOfNames.push(jsonData.users[user].twitter_username);
                 }
                 if(jsonData.users[user].vk_linked == true){
                     listOfSN.push("vk");
+                    listOfNames.push(jsonData.users[user].vk_username);
                 }
             }
         }
-        cb({list:listOfSN});
+        cb({list:listOfSN, list_un: listOfNames});
     });
     socket.on('insertUserName',(data,cb)=>{            
         var ret = tools.putuser(jsonData,data.sn,socket.handshake.session.email,data.user);

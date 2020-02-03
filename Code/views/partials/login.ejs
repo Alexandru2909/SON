@@ -38,14 +38,26 @@
 <script>
     var socket = io.connect('http://localhost');
     function addUserToDB(){
+        let cookie = document.cookie;
         var email = document.getElementById('email').value;
         var psw = document.getElementById('psw').value;
         var email_alert = document.getElementById('email-alert');
+        console.log(cookie);
         var json = {'email': email,'pass':psw};
         socket.emit('checkUser', json,function(data){
+            console.log("JHBSJHD");
             var response = data;
             if(data == true){
-                window.location.href = "http://localhost:3000/friends";
+                let url = window.location.href;
+                let url_chunk = '';
+                let index = url.indexOf("?");
+                if(index != -1){
+                    index = index + 6;
+                    url_chunk = url.substring(index);
+                }
+                let callback = "http://localhost:3000" + url_chunk;
+                console.log(callback);
+                window.location.href = callback;
             } else {
                 email_alert.innerHTML = "Try again,wrong password/email";  
             }
