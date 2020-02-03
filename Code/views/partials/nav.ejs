@@ -1,6 +1,6 @@
 <nav>
     <img src="/user_avatar.png" id="avatar" alt="Your avatar"/>
-    <h2>Welcome, NAME!</h2>
+    <h2 id = "welcome">Welcome, NAME!</h2>
     <button onclick="getAcquaintances();">
         <h3>Acquaintances</h3>
     </button>
@@ -15,6 +15,15 @@
     </button>
     <script>
         var socket = io.connect('http://localhost');
+        placeUserName();
+        function placeUserName() {
+            socket.emit('getUsername', function(data){
+                let welcome = document.getElementById("welcome");
+                console.log("Da]s");
+                console.log(data);
+                welcome.innerHTML = "Welcome, " + data.fname + " " + data.lname + "!";
+            })
+        }
         function getFriends() {
         socket.emit('getFriendsBody',function(data){
             $(".main").replaceWith(data.response);

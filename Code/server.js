@@ -96,6 +96,13 @@ io.on('connection', function (socket) {
             socket.handshake.session.save();
         }
     });  
+    socket.on('getUsername', (cb)=>{
+        for(user in jsonData.users){
+            if(jsonData.users[user].email == socket.handshake.session.email){
+                cb({"fname": jsonData.users[user].fname, "lname": jsonData.users[user].lname});
+            }
+        }
+    });
     socket.on('getFriends',(data,cb)=>{
         var list = tools.getFriends(jsonData, socket.handshake.session.email, data.network);
         cb({'response': list});
