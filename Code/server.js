@@ -67,6 +67,11 @@ app.get('/login', function(req, res){
     res.render('partials/login');
 });
 
+app.get('/api',function(req,res){
+    // var x = tools.getAcq(req.body.username,req.body.pass);
+    // res.json(x);
+})
+
 
 
 //SOCKET CODe
