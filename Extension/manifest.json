@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "SON extension",
+  "description": "Social networking app extension",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "SON.png",
+    "default_popup": "popup.html"
+  },  
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["jquery-3.4.1.min.js", "content.js"]
+    }
+  ],
+  "permissions": ["storage","activeTab"]
+}
