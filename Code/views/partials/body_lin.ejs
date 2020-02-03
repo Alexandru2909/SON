@@ -1,6 +1,6 @@
 
     <div class="main" style="margin-left: 21%;">
-        <!-- <!-- <script type="text/javascript" src="lastfm.api.md5.js"></script> -->
+        <!-- <script type="text/javascript" src="lastfm.api.md5.js"></script> -->
         <!-- <script type="text/javascript" src="lastfm.api.js"></script>
         <script type="text/javascript" src="lastfm.api.cache.js"></script> -->
 
@@ -56,7 +56,7 @@
         var url = window.location.href;
         url = new URL(url);
         var sn = url.searchParams.get("sn");
-        socket.emit('addAcq',function(data){})
+        socket.emit('addAcq',function(data){});
         switch(sn){
             case 'lastfm':
                 var token = url.searchParams.get("token");
@@ -65,7 +65,11 @@
             case 'twitter':
                 var oauth_token = url.searchParams.get("oauth_token");
                 var oauth_verifier = url.searchParams.get("oauth_verifier");
-                socket.emit('toggleLink',{social_network: sn, user_token: oauth_token, verifier: oauth_verifier},function(data){})
+                socket.emit('toggleLink',{social_network: sn, user_token: oauth_token, verifier: oauth_verifier},function(data){
+                    var twitter_checkbox = document.getElementById("twitter");
+                    twitter_checkbox.checked = true;
+                })
+                // socket.emit('insertTwitterFriends', function(data){});
                 break;
             case 'vk':
                 var hashes = location.hash.split('&');
@@ -76,6 +80,8 @@
                 })
                 break;
         }
+        console.log("terminated");
+        return(true);
     }
 
     function updateLinks(){
@@ -101,7 +107,7 @@
                     vk_input.value = data.list_un[sn];
                 }
             }
-        })
+        });
     }
 
     function connlinkedin(){

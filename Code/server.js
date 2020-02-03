@@ -220,6 +220,15 @@ io.on('connection', function (socket) {
                         break;
                     }
                 }
+                for(user in jsonData.users){
+                    if(jsonData.users[user].email == socket.handshake.session.email){
+                        var username = jsonData.users[user].twitter_username;
+                        clientTwitter.get("friends/list", { count: 100, screen_name: username, skip_status: "true" }, function(err, res) {
+                            var friends = JSON.parse(JSON.stringify(res))["users"]
+                            tools.addFriend(jsonData, socket.handshake.session.email, friends, "twitter");
+                        });
+                    }
+                }
             });
         }
     cb({'response': true});
@@ -257,7 +266,7 @@ io.on('connection', function (socket) {
         var listOfNames = [];
         for(user in jsonData.users){
             if(jsonData.users[user].email == socket.handshake.session.email){
-                console.log(jsonData.users[user]);
+                // console.log(jsonData.users[user]);
                 if(jsonData.users[user].lastfm_linked == true){
                 listOfSN.push("lastfm");
                 listOfNames.push(jsonData.users[user].lastfm_username);
@@ -363,7 +372,14 @@ io.on('connection', function (socket) {
         })
         
     })
+
+    socket.on('insertTwitterFriends', (cb)=>{
+        
+        cb(true);
+    })
+
     socket.on('twitterOut',(cb)=>{
+        console.log("Out");
         for(user in jsonData.users){
             if(jsonData.users[user].email == socket.handshake.session.email){
                 jsonData.users[user].twitter_username = "";
