@@ -179,7 +179,7 @@
         } else {
             socket.emit('twitterOut',function(data){
                 if(data){
-                    redirectProcess();
+                    window.location.href = "www.localhost:3000/links";
                 }
             })
         }
