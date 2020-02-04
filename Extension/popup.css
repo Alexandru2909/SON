@@ -1,1 +1,61 @@
-/* to be filled with acquaintances  */
+body{
+    background-color: #E5E5DE;
+    text-decoration: none;
+    margin:0cm;
+    width: 10cm;
+}
+#main>h2{
+    text-align: center;
+    background-color:  #778da9;
+    margin:0cm
+}
+div#scrolls{
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    background-color: #153b50;
+    scrollbar-width: thin;
+}
+#face{
+    min-width: 3.5cm;
+    background-color: #e0e1dd;
+    margin: 0.1cm;
+    border-radius: 0.1cm;
+    padding: 0cm;
+
+}
+#face>h4{
+    margin: 0.1cm;
+}
+#face>h3{
+    text-align: center;
+    margin: 0cm;
+    background-color: #778da9;
+    border-radius: 0.1cm;
+    border: 0.5cm;
+    padding-top: 0.05cm;
+    padding-bottom: 0.05cm;
+}
+body a{
+    color: rgb(0, 14, 139);
+    text-decoration: none;
+}
+div#options{
+    display: flex;
+}
+select{
+    background-color: #153b50;
+    width: 40%;
+    color: #e0e1dd;
+}
+
+input {
+    font-family: "Raleway", sans-serif;
+    font-size: 16px;
+    background-color: #3A697F;
+    color: #e0e1dd;
+    border: none;
+    padding:0.1cm;
+    cursor: pointer;
+    width: 60%;
+}

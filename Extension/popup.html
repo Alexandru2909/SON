@@ -4,15 +4,24 @@
 <head>
     <title>The SON</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/popup.css">
+    <link rel="stylesheet" type="text/css" href="./popup.css">
     <style>
         body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </style>
 </head>
 
 <body>
-    <div id="id1">-</div>
-    <input type="button" name="Refresh" id="buton"/>
+    <div id="main"><H2>Hello, here are your recommendations</H2></div>
+    <div id="options">
+    <select>
+        <option><h3>Twitter</h3></option>
+        <option><h3>VK</h3></option>
+        <option><h3>LastFM</h3></option>
+        <option><h3>LinkedIn</h3></option>
+    </select>
+    <input type="button" value="Sync &#8634; " id="buton"/>
+    </div>
+    <div id="scrolls"></div>
     <script src="popup.js" type="text/javascript"></script>
 </body>
 

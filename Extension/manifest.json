@@ -9,10 +9,20 @@
   },  
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": ["jquery-3.4.1.min.js", "content.js"]
+      "matches": ["http://www.localhost:3000/*"],
+      "js": ["jquery-3.4.1.min.js", "contentSON.js"]
+    },
+    {
+      "matches": ["https://www.vk.com/*"],
+      "js": ["jquery-3.4.1.min.js", "contentVK.js"]
+    },
+    {
+      "matches": ["https://www.twitter.com/*"],
+      "js": ["jquery-3.4.1.min.js", "contentTWI.js"]
+    },
+    {
+      "matches": ["https://www.last.fm/home*"],
+      "js": ["jquery-3.4.1.min.js", "contentLFM.js"]
     }
   ],
   "permissions": ["storage","activeTab"]
