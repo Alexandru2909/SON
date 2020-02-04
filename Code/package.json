@@ -25,6 +25,10 @@
     "lastfmapi": "^0.1.1",
     "socket.io": "^2.3.0",
     "twitter": "^1.7.1",
+    "vis": "^4.21.0-EOL",
+    "vis-data": "^6.3.5",
+    "vis-network": "^7.3.3",
+    "vis-util": "^2.1.0",
     "vk-io": "^4.0.0-rc.30"
   }
 }

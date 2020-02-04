@@ -252,6 +252,77 @@ module.exports = {
 		return ret_json;
 	},
 
+	extractFriendsGraph(jsonData, user, user_id, sn, depth, maxDepth, lastID, data){
+		var username = "";
+		switch(sn){
+			case "lastfm":
+				var username = user.lastfm_username;
+				break;
+			case "twitter":
+				var username = user.twitter_username;
+				break;
+			case "vk":
+				var username = user.vk_username;
+				break;
+		}
+
+		if(depth == 0){
+			data.nodes.push({
+				"id": 1,
+				"label": username,
+				"x" : 250,
+				"y" : 250,
+				"group": "root"
+				// "from" : "",
+				// "kinship": 0
+			});
+			depth += 1;
+		}
+		if(depth < maxDepth){
+			for(i in user.friends){
+				if(user.friends[i].sn == sn){
+					let friends_list = user.friends[i].friends;
+					for(friend in friends_list){
+						lastID += 1;
+						data.nodes.push({
+							"id": lastID,
+							"label": friends_list[friend].name,
+							"group": "regular"
+							// "from": username,
+							// "kinship": depth
+						});
+						data.edges.push({
+							from: user_id,
+							to: lastID,
+							"arrows": 'to'
+						});
+						
+						for(user in jsonData.users){
+							var user_snName = "";
+							switch(sn){
+								case "lastfm":
+									var user_snName = jsonData.users[user].lastfm_username;
+									break;
+								case "twitter":
+									var user_snName = jsonData.users[user].twitter_username;
+									break;
+								case "vk":
+									var user_snName = jsonData.users[user].vk_username;
+									break;
+							}
+							if(user_snName == friends_list[friend].name){
+								this.extractFriendsGraph(jsonData, jsonData.users[user], lastID, sn, depth+1, maxDepth, lastID, data);
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+		return data;
+	},
+
 	getRealName: function(real_name) {
 		ret_name = real_name;
 		ret_name = ret_name.replace(/\s/g, '');
