@@ -68,10 +68,9 @@ app.get('/login', function(req, res){
 });
 
 app.get('/api',function(req,res){
-    // var x = tools.getAcq(req.body.username,req.body.pass);
-    // res.json(x);
+    var x = tools.getAcq(jsonData, req.body.email);
+    res.json(x);
 })
-
 
 
 //SOCKET CODe

@@ -202,6 +202,56 @@ module.exports = {
 			}
 		}
 	},
+
+	getAcq(jsonData, email){
+		let ret_json = {
+			users:[]
+		}
+		console.log(ret_json);
+		for(user in jsonData.users){
+			if(jsonData.users[user].email == email){
+				for(a in jsonData.users[user].acquaintances){
+					let acq = jsonData.users[user].acquaintances[a];
+					console.log(acq.alsoOn);
+					let sn = acq.alsoOn;
+					switch(sn){
+						case "twitter":
+							var obj = {
+								fname : acq.acq.fname,
+								lname : acq.acq.lname,
+								sn : acq.alsoOn,
+								sn_username: acq.acq.twitter_username,
+								link : "https://www.twitter.com/" + acq.acq.twitter_username
+							}
+							ret_json.users.push(obj);
+							break;
+						case "vk":
+							var obj = {
+								fname : acq.acq.fname,
+								lname : acq.acq.lname,
+								sn : acq.alsoOn,
+								sn_username: acq.acq.vk_username,
+								link : ""
+							}
+							ret_json.users.push(obj);
+							break;
+						case "lastfm":
+							var obj = {
+								fname : acq.acq.fname,
+								lname : acq.acq.lname,
+								sn : acq.alsoOn,
+								sn_username: acq.acq.lastfm_username,
+								link : "https://www.lastfm.com/user/" + acq.acq.twitter_username
+							}
+							ret_json.users.push(obj);
+							break;
+					}
+				}
+			}
+		}
+		return ret_json;
+	},
+
 	getRealName: function(real_name) {
 		ret_name = real_name;
 		ret_name = ret_name.replace(/\s/g, '');
