@@ -1,0 +1,71 @@
+
+<div class="main" style="margin-left: 21%; height: 100%; ">
+    <div class = "page" style="width : 100%; height: 100%; margin-top: 5%;">
+        <button class="filter-button black" onclick="addGraph('lastfm');">Last FM</button>
+        <button class="filter-button black" onclick="addGraph('twitter');">Twitter</button>
+        <button class="filter-button black" onclick="addGraph('vk');">VK</button>
+        <br>
+        <br>
+        <button id = "download" class="filter-button black" style="display: none;">Download grah</button>
+        <div id = "network_display" style="margin-top: 10%; width:100%; height: 70%; background-color: #262621;">
+        </div>
+    </div>
+</div>
+</html>
+
+
+<script type="text/javascript" >
+    var socket = io.connect('http://localhost');
+    // addGraph();
+    function addGraph(sn){
+        socket.emit("getGraphInfo", {sn: sn}, function(data){
+            var downloadButton = document.getElementById("download");
+            downloadButton.setAttribute("style", "display: inline-block");
+            var sn_name = "";
+            switch(sn){
+                case "lastfm":
+                    var sn_name = "Last FM";
+                    break;
+                case "twitter":
+                    var sn_name = "Twitter";
+                    break;
+                case "vk":
+                    var sn_name = "VK";
+                    break;
+            }
+            downloadButton.innerHTML = "Download the FOAF graph for " + sn_name;
+
+            var nodes = new vis.DataSet(data.response.nodes);
+            var edges = new vis.DataSet(data.response.edges);
+
+            var container = document.getElementById("network_display");
+            container.setAttribute("style", "margin-top: 5.5%; width:100%; height: 70%; background-color: #262621;");
+            var data = {
+                nodes : nodes,
+                edges : edges
+            };
+            var options = {
+                nodes: {
+                    shadow: true,
+                    borderWidth: 2
+                },
+                groups: {
+                    root: {
+                        color: {
+                            background: 'cyan',
+                            border: "cyan"
+                        },
+                        shape: "box"
+                    },
+                    regular: {
+                        color: {
+                            background: "rgb(0,255,140)",
+                            border: "rgb(0,255,140)"
+                        }
+                    }
+                }
+            };
+            var network = new vis.Network(container, data, options);
+        });
+    }
+</script>

@@ -9,7 +9,11 @@
         <%     if(page == 'links'){ %>
 <%- include ../partials/body_lin %>
 <%   }else{%>
+    <%     if(page == 'graph'){ %>
+        <%- include ../partials/graph%>
+<%   }else{%>
 <%- include ../partials/devmain %>
+<%}%>
 <%}%>
 <%}%>
 <%}%>

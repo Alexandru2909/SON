@@ -117,6 +117,7 @@ nav>button{
 
 body{
     background-color: #f1f1f1;
+    height: 100%;
 }
 
 .site_profile{
@@ -382,6 +383,11 @@ button {
     background-color:#fff!important
 }
 
+.black{
+    color: #fff;
+    background-color: #262621;
+}
+
 .user_profile{
     padding: 1.5%;
     padding-bottom: 0%;
@@ -392,4 +398,8 @@ button {
 }
 .user_profile>a{
     color: #f1f1f1;
+}
+
+.main{
+    height: 100%;
 }

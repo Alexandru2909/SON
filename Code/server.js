@@ -58,6 +58,11 @@ app.get('/friends',tools.checkAuth, function(req, res) {
         page: 'friends'
     });
 });
+app.get('/graph', tools.checkAuth, function(req, res) {
+    res.render("partials/index", {
+        page: 'graph'
+    });
+});
 
 app.get('/signup', function(req, res){
     res.render('partials/sign_up');
@@ -68,10 +73,9 @@ app.get('/login', function(req, res){
 });
 
 app.get('/api',function(req,res){
-    // var x = tools.getAcq(req.body.username,req.body.pass);
-    // res.json(x);
+    var x = tools.getAcq(jsonData, req.body.email);
+    res.json(x);
 })
-
 
 
 //SOCKET CODe
@@ -126,6 +130,20 @@ io.on('connection', function (socket) {
                 cb({"response" : jsonData.users[user].acquaintances});
         }
     })
+    socket.on('getGraphInfo', (sn, cb)=>{
+        for(u in jsonData.users){
+            if(jsonData.users[u].email == socket.handshake.session.email){
+                let data = {
+                    nodes:[],
+                    edges:[]
+                };
+                var list = tools.extractFriendsGraph(jsonData, jsonData.users[u], 1, sn.sn, 0, 3, 1, data);
+                // var foaf_content = tools.generateFOAF(list);
+                break;
+            }
+        }
+        cb({'response' : list});
+    })
     socket.on('getMatchingFriends',(data,cb)=>{
         var matching_friends = [];
         for(user in jsonData.users){
@@ -157,8 +175,8 @@ io.on('connection', function (socket) {
         var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
         cb({'response': cnt});
     })
-    socket.on('downloadGraph',(cb)=>{
-        var cnt = String(fs.readFileSync(__dirname + '/views/partials/body_lin.ejs','utf8'));
+    socket.on('getGraphBody',(cb)=>{
+        var cnt = String(fs.readFileSync(__dirname + '/views/partials/graph.ejs','utf8'));
         cb({'response': cnt});
     })
     socket.on('addAcq',(cb)=>{

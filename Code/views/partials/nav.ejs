@@ -10,8 +10,8 @@
     <button onclick="getLinks();">
         <h3>Linked accounts</h3>
     </button>
-    <button onclick="downloadGraph();">
-        <h3>Download network graph</h3>
+    <button onclick="getGraph();">
+        <h3>FOAF Graph</h3>
     </button>
     <script>
         var socket = io.connect('http://localhost');
@@ -19,7 +19,6 @@
         function placeUserName() {
             socket.emit('getUsername', function(data){
                 let welcome = document.getElementById("welcome");
-                console.log("Da]s");
                 console.log(data);
                 welcome.innerHTML = "Welcome, " + data.fname + " " + data.lname + "!";
             })
@@ -42,10 +41,11 @@
             })
             window.history.pushState("object or string","Page Title","/links");
         }
-        function downloadGraph(){
-            socket.emit('downloadGraph',function(data){
+        function getGraph(){
+            socket.emit('getGraphBody',function(data){
                 $(".main").replaceWith(data.response);
             })
+            window.history.pushState("object or string","Page Title","/links");
         }
         </script>
 </nav>
