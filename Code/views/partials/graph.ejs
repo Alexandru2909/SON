@@ -7,7 +7,7 @@
         <br>
         <br>
         <button id = "download" class="filter-button black" style="display: none;">Download grah</button>
-        <div id = "network_display" style="margin-top: 10%; width:100%; height: 70%; background-color: #262621;">
+        <div id = "network_display" style="margin-top: 6.5%; width:100%; height: 70%; background-color: #262621;">
         </div>
     </div>
 </div>
@@ -16,9 +16,11 @@
 
 <script type="text/javascript" >
     var socket = io.connect('http://localhost');
+    var foaf = "";
     // addGraph();
     function addGraph(sn){
         socket.emit("getGraphInfo", {sn: sn}, function(data){
+            foaf = data.foaf;
             var downloadButton = document.getElementById("download");
             downloadButton.setAttribute("style", "display: inline-block");
             var sn_name = "";
@@ -39,7 +41,7 @@
             var edges = new vis.DataSet(data.response.edges);
 
             var container = document.getElementById("network_display");
-            container.setAttribute("style", "margin-top: 5.5%; width:100%; height: 70%; background-color: #262621;");
+            container.setAttribute("style", "margin-top: 3.7%; width:100%; height: 70%; background-color: #262621;");
             var data = {
                 nodes : nodes,
                 edges : edges
@@ -68,4 +70,24 @@
             var network = new vis.Network(container, data, options);
         });
     }
+
+    function downloadGraph(){
+        // var data = new Blob([foaf], {type: 'text/plain'});
+        // var url = window.URL.createObjectURL(data);
+        // document.getElementById("download").href = url;
+        var element = document.createElement('a');
+        element.style.display = "none";
+        element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(foaf));
+
+        element.setAttribute('download', "SON-graph");
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    document.getElementById('download').addEventListener('click', function(){
+        downloadGraph();
+    }, false);
 </script>

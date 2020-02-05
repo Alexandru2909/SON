@@ -131,18 +131,24 @@ io.on('connection', function (socket) {
         }
     })
     socket.on('getGraphInfo', (sn, cb)=>{
+        let foaf = "<rdf:RDF>\n";
         for(u in jsonData.users){
             if(jsonData.users[u].email == socket.handshake.session.email){
                 let data = {
                     nodes:[],
                     edges:[]
                 };
-                var list = tools.extractFriendsGraph(jsonData, jsonData.users[u], 1, sn.sn, 0, 3, 1, data);
-                // var foaf_content = tools.generateFOAF(list);
+                var ret = tools.extractFriendsGraph(jsonData, jsonData.users[u], 1, sn.sn, 0, 3, 1, data, foaf);
+                // var foaf_content = tools.generateFOAF(jsonData, list, sn.sn);
+                var list = ret[0];
+                var aux_foaf = ret[1];
+                foaf += aux_foaf;
+                // console.log(list, foaf);
                 break;
             }
         }
-        cb({'response' : list});
+        foaf += "</rdf:RDF>";
+        cb({'response' : list, 'foaf' : foaf});
     })
     socket.on('getMatchingFriends',(data,cb)=>{
         var matching_friends = [];
