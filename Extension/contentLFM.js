@@ -8,3 +8,5 @@ chrome.storage.sync.get("acqs", function (obj) {
     }
     alert("Welcome to LastFM!,you have " + count + " new possible contacts!\nCheck them out in the extension!")
 });
+chrome.runtime.sendMessage({sn: "lastfm"}, function(response) {
+  });

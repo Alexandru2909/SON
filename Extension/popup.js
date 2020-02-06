@@ -36,7 +36,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 function sync(){
 	chrome.storage.sync.get("user", function (obj) {
-		document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations</H2>";
+		document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations:</H2>";
 		if (obj.user){
 			var url = 'http://localhost:3000/api';
 			var data = {
