@@ -72,9 +72,13 @@ app.get('/login', function(req, res){
     res.render('partials/login');
 });
 
-app.get('/api',function(req,res){
-    var x = tools.getAcq(jsonData, req.body.email);
-    res.json(x);
+//to parse arguments coming from json
+app.use(express.json());
+
+app.post('/api',function(req,res){
+    console.log(req.body.name);
+    var x = tools.getAcq(jsonData, req.body.name);
+    res.json(JSON.stringify(x));
 })
 
 
@@ -440,9 +444,6 @@ io.on('connection', function (socket) {
 
 
 //END
-
-//to parse arguments coming from json
-app.use(express.json());
 
 app.post('/functions',(req,res) => {
     console.log('Processing ' + req.body.func + '...');

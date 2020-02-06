@@ -36,7 +36,7 @@ div#scrolls{
     padding-top: 0.05cm;
     padding-bottom: 0.05cm;
 }
-body a{
+#face>a{
     color: rgb(0, 14, 139);
     text-decoration: none;
 }
@@ -45,17 +45,27 @@ div#options{
 }
 select{
     background-color: #153b50;
-    width: 40%;
+    width: 50%;
     color: #e0e1dd;
 }
-
-input {
+input{
     font-family: "Raleway", sans-serif;
     font-size: 16px;
-    background-color: #3A697F;
-    color: #e0e1dd;
     border: none;
     padding:0.1cm;
     cursor: pointer;
-    width: 60%;
+    width: 50%;
+    background-color: #3A697F;
+    color: #e0e1dd;
+}
+a#btn2 {
+    font-family: "Raleway", sans-serif;
+    font-size: 16px;
+    padding-top: 0.1cm;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    width: 50%;
+    background-color:#e0e1dd ;
+    color: #3A697F ;
 }
