@@ -17,11 +17,11 @@
       "js": ["jquery-3.4.1.min.js", "contentVK.js"]
     },
     {
-      "matches": ["https://www.twitter.com/*"],
+      "matches": ["https://twitter.com/*"],
       "js": ["jquery-3.4.1.min.js", "contentTWI.js"]
     },
     {
-      "matches": ["https://www.last.fm/home*"],
+      "matches": ["https://www.last.fm/*"],
       "js": ["jquery-3.4.1.min.js", "contentLFM.js"]
     }
   ],
