@@ -2,6 +2,7 @@ document.getElementById("faces").addEventListener("click", function(){getFaces('
 document.getElementById("sync").addEventListener("click", function(){sync();});
 //ADDED NOW
 function getFaces(option){
+	console.log('face',option)
 	chrome.storage.sync.get("acqs", function (obj) {
 		var li = JSON.parse(obj.acqs);
 		var cnt=0;
@@ -39,54 +40,35 @@ function sync(){
 		document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations:</H2>";
 		if (obj.user){
 			var url = 'http://localhost:3000/api';
-			var data = {
-				'name': obj.user[0]
-			}
-			console.log(data);
-			var otherParam ={
-				headers:{
-				"content-type":"text/plain"
-				},
-				body:JSON.stringify(data),
-				method:"POST",
-				mode:'no-cors'
+			var xhr = new XMLHttpRequest();
+			var url = 'http://www.localhost:3000/api?name=' + obj.user[0];
+			xhr.responseType = 'json';
+			xhr.open('GET', url, true);
+			xhr.onload  = function() {
+				var jsonResponse = xhr.response;
+				console.log(jsonResponse)
+				chrome.storage.sync.set({'acqs':jsonResponse})
 			};
-			fetch(url,otherParam)
-			.then(data=>{return data.json()})
-			.then(res=>{
-				chrome.storage.sync.set({'acqs':res})
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-			  })
+			xhr.send(null);
 		}
 		else{
-			// SET BADGE
-			// chrome.browserAction.setBadgeText({text: "10+"});
 
 			//get user login + save data + show data on ext
 			function display_h1 (results){
 				h1=results;
 				chrome.storage.sync.set({'user':[h1[0].split('/')[0],h1[0].split('/')[1]]})
-				document.querySelector("#main").innerHTML = "<p>Hello," + h1[0].split('/')[0].split('@')[0] + "</p>";
-				var url = 'http://localhost:3000/api';
-				var data = {
-					'name': h1[0].split('/')[0]
-				}
-				console.log(data);
-				var otherParam ={
-					headers:{
-					"content-type":"application/json"
-					},
-					body:JSON.stringify(data),
-					method:"POST"
+				document.querySelector("#main").innerHTML = "<H2>Hello " + h1[0].split('/')[0].split('@')[0] + ", here are your recommendations:</H2>";
+				
+				var xhr = new XMLHttpRequest();
+				var url = 'http://www.localhost:3000/api?name=' + h1[0].split('/')[0];
+				xhr.responseType = 'json';
+				xhr.open('GET', url, true);
+				xhr.onload  = function() {
+					var jsonResponse = xhr.response;
+					console.log(jsonResponse)
+					chrome.storage.sync.set({'acqs':jsonResponse})
 				};
-				fetch(url,otherParam)
-				.then(data=>{return data.json()})
-				.then(res=>{
-					chrome.storage.sync.set({'acqs':res})
-				})
-				// document.querySelector("#main").innerHTML = "<p>tab title: " + tab_title + "</p><p>dom h1: " + h1[0].split('/')[0] + "</p>";
+				xhr.send(null);
 				}
 			chrome.tabs.query({active: true}, function(tabs) {
 				var tab_title = '';

@@ -73,11 +73,13 @@ app.get('/login', function(req, res){
 });
 
 //to parse arguments coming from json
-app.use(express.json());
+app.use(express.json({
+    type: ['application/json', 'text/plain']
+  }))
 
-app.post('/api',function(req,res){
-    console.log(req.body.name);
-    var x = tools.getAcq(jsonData, req.body.name);
+app.get('/api',function(req,res){
+    console.log(req.query);
+    var x = tools.getAcq(jsonData, req.query.name);
     res.json(JSON.stringify(x));
 })
 
