@@ -259,6 +259,7 @@ module.exports = {
 
 	extractFriendsGraph(jsonData, user, user_id, sn, depth, maxDepth, lastID, data, foaf){
 		var username = "";
+		let already_added = false;
 		switch(sn){
 			case "lastfm":
 				var username = user.lastfm_username;
@@ -288,26 +289,40 @@ module.exports = {
 				if(user.friends[i].sn == sn){
 					let friends_list = user.friends[i].friends;
 					for(friend in friends_list){
-						lastID += 1;
-						data.nodes.push({
-							"id": lastID,
-							"label": friends_list[friend].name,
-							"group": "regular"
-							// "from": username,
-							// "kinship": depth
-						});
-						data.edges.push({
-							from: user_id,
-							to: lastID,
-							"arrows": 'to'
-						});
+						already_added = false;
+						for(node in data.nodes){
+							if(data.nodes[node].label == friends_list[friend].name){
+								already_added = true;
+								data.edges.push({
+									from: user_id,
+									to: data.nodes[node].id,
+									'arrows': 'to'
+								});
+								// break;
+							}
+						}
+						if(already_added == false){
+							lastID += 1;
+							data.nodes.push({
+								"id": lastID,
+								"label": friends_list[friend].name,
+								"group": "regular"
+								// "from": username,
+								// "kinship": depth
+							});
+							data.edges.push({
+								from: user_id,
+								to: lastID,
+								"arrows": 'to'
+							});
 
-						foaf += "<foaf:Person>\n\t<foaf:Person rdf:Name=" + friends_list[friend].real_name + '>\n\t<foaf:name xml:lang="en">' + friends_list[friend].real_name + "</foaf:name>\n";
-						foaf += '\t<foaf:img>' + friends_list[friend].img + "</foaf:img>\n";
-						foaf += '\t<foaf:OnlineAccount>\n\t\t<foaf:accountName>' + friends_list[friend].name + '</foaf:accountName>\n';
-						foaf += '\t\t<foaf:accountLink>' + friends_list[friend].link + "</foaf:accountLink>\n\t</foaf:OnlineAccount>\n";
-						foaf += '\t<foaf:knownBy>\n' + '\t\t<foaf:Person>\n' + '\t\t\t<foaf:name>' + username  + '</foaf:name>\n' + '\t\t</foaf:Person>\n' + '\t<foaf:knows>\n';
-						foaf += "</foaf:Person>\n";
+							foaf += "<foaf:Person>\n\t<foaf:Person rdf:Name=" + friends_list[friend].real_name + '>\n\t<foaf:name xml:lang="en">' + friends_list[friend].real_name + "</foaf:name>\n";
+							foaf += '\t<foaf:img>' + friends_list[friend].img + "</foaf:img>\n";
+							foaf += '\t<foaf:OnlineAccount>\n\t\t<foaf:accountName>' + friends_list[friend].name + '</foaf:accountName>\n';
+							foaf += '\t\t<foaf:accountLink>' + friends_list[friend].link + "</foaf:accountLink>\n\t</foaf:OnlineAccount>\n";
+							foaf += '\t<foaf:knownBy>\n' + '\t\t<foaf:Person>\n' + '\t\t\t<foaf:name>' + username  + '</foaf:name>\n' + '\t\t</foaf:Person>\n' + '\t<foaf:knows>\n';
+							foaf += "</foaf:Person>\n";
+						}
 						
 						for(user in jsonData.users){
 							var user_snName = "";
