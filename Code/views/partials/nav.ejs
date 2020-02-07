@@ -13,6 +13,9 @@
     <button onclick="getGraph();">
         <h3>FOAF Graph</h3>
     </button>
+    <button onclick="logOut();">
+        <h3>Log out</h3>
+    </button>
     <script>
         var socket = io.connect('http://localhost');
         placeUserName();
@@ -46,6 +49,10 @@
                 $(".main").replaceWith(data.response);
             })
             window.history.pushState("object or string","Page Title","/graph");
+        }
+        function logOut(){
+            socket.emit('logout', function(data){});
+            window.location.href = "http://www.localhost:3000/login";
         }
         </script>
 </nav>
