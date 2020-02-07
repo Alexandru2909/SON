@@ -3,22 +3,30 @@ body{
     text-decoration: none;
     margin:0cm;
     width: 10cm;
+    border-radius: 10%;
 }
 #main>h2{
+    height: 40px;
+    padding-top: 3%;
     text-align: center;
-    background-color:  #778da9;
+    background-color:  #f1f1f1;
     margin:0cm
 }
 div#scrolls{
     flex: 1;
     display: flex;
     overflow: auto;
-    background-color: #153b50;
+    background-color: #3a3a39;
     scrollbar-width: thin;
 }
+
+#faces{
+    margin-left: 2px;
+}
+
 #face{
     min-width: 3.5cm;
-    background-color: #e0e1dd;
+    background-color: #f1f1f1;
     margin: 0.1cm;
     border-radius: 0.1cm;
     padding: 0cm;
@@ -30,8 +38,11 @@ div#scrolls{
 #face>h3{
     text-align: center;
     margin: 0cm;
-    background-color: #778da9;
-    border-radius: 0.1cm;
+    background-color: #262621;
+    color: #f1f1f1;
+    border-top-left-radius: 0.1cm;
+    border-top-right-radius: 0.1cm;
+    /* border-radius: 0.1cm; */
     border: 0.5cm;
     padding-top: 0.05cm;
     padding-bottom: 0.05cm;
@@ -44,9 +55,12 @@ div#options{
     display: flex;
 }
 select{
-    background-color: #153b50;
-    width: 50%;
-    color: #e0e1dd;
+    background-color: #262621;
+    width: 49%;
+    padding:8px 16px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
 }
 input{
     font-family: "Raleway", sans-serif;
@@ -55,17 +69,45 @@ input{
     padding:0.1cm;
     cursor: pointer;
     width: 50%;
-    background-color: #3A697F;
-    color: #e0e1dd;
+    /* background-color: #3A697F;
+    color: #e0e1dd; */
 }
 a#btn2 {
     font-family: "Raleway", sans-serif;
     font-size: 16px;
-    padding-top: 0.1cm;
+    padding: 0.1cm;
+    padding-top: 2%;
     border: none;
-    text-align: center;
+    /* text-align: center; */
     cursor: pointer;
     width: 50%;
-    background-color:#e0e1dd ;
-    color: #3A697F ;
+    /* background-color:#e0e1dd ;
+    color: #3A697F ; */
+    margin-left: 2px;
+}
+
+.button-extension{
+    font: 16px !important;
+    /* font-weight: bold; */
+    border:none;
+    display:inline-block;
+    padding:8px 16px;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.black {
+    color:#fff;
+    background-color: #262621;
+}
+
+.white {
+    color: #262621;
+    background-color: #fff;
 }
