@@ -301,6 +301,7 @@ module.exports = {
 							to: lastID,
 							"arrows": 'to'
 						});
+
 						foaf += "<foaf:Person>\n\t<foaf:Person rdf:Name=" + friends_list[friend].real_name + '>\n\t<foaf:name xml:lang="en">' + friends_list[friend].real_name + "</foaf:name>\n";
 						foaf += '\t<foaf:img>' + friends_list[friend].img + "</foaf:img>\n";
 						foaf += '\t<foaf:OnlineAccount>\n\t\t<foaf:accountName>' + friends_list[friend].name + '</foaf:accountName>\n';
@@ -322,7 +323,9 @@ module.exports = {
 									break;
 							}
 							if(user_snName == friends_list[friend].name){
-								this.extractFriendsGraph(jsonData, jsonData.users[user], lastID, sn, depth+1, maxDepth, lastID, data, foaf);
+								var aux;
+								aux = this.extractFriendsGraph(jsonData, jsonData.users[user], lastID, sn, depth+1, maxDepth, lastID, data, foaf);
+								foaf = aux[1];
 								break;
 							}
 						}
