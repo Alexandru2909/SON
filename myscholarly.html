@@ -167,7 +167,7 @@
 
                     
                 </p>
-                <h3>4. Application Scenarios</h3>
+                <h3>Application Scenarios</h3>
                 <figure typeof="sa:Image">
                     <img src="Usecase.png" alt="usecase">
                     <figcaption> Usecase Diagram </figcaption>
@@ -185,6 +185,40 @@
                     For the user to refresh the friends list, he can simply log out and back in to the app. After this a new token
                     will be generated and the friends list will be imported again.
                     </ol>
+        </section>
+
+        <section>
+            <h2>Browser extension</h2>
+            <p>One of our application's features includes a browser extension for
+                Google Chrome:
+            </p>
+            <img src="./Ext1.png" alt="Extension screen">
+            <figcaption> Basic look of the extension </figcaption>
+            To make it happen, we used some of the Chrome's built in library of APIs:
+            <ul>
+                <li>
+                    chrome.storage to store data client-side related to the possible contacts.
+                </li>
+                <li>
+                    chrome.tabs to access the client's current tab and to fetch data to make sure the 
+                    client is logged in to our app.
+                </li>
+            </ul>
+            <p>
+                The manifest of the extension shows the scripts used and the permissions it requires:
+            </p>
+            <img src="./manifest.png" alt="manifest.json">
+            <figcaption> Manifest of the extension </figcaption>
+            <p>
+                The extension provides the client with a bunch of popups to remind him of the possible contacts,
+                for example, when entering the www.twitter.com site, the manifest of our extension will know the link 
+                the client just accessed should enable a script, so it will display such a message:
+            </p>
+            <img src="./notif.png" alt="notification on twitter">
+            <figcaption> Notification example </figcaption>
+        </section>
+        <section>
+            <!-- GRAPH PART -->
         </section>
         <section>
             <h2>Development stages</h2>

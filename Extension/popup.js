@@ -36,23 +36,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function sync(){
-	chrome.storage.sync.get("user", function (obj) {
-		if (obj.user){
-			document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations:</H2>";
-			var url = 'http://localhost:3000/api';
-			var xhr = new XMLHttpRequest();
-			var url = 'http://www.localhost:3000/api?name=' + obj.user[0];
-			xhr.responseType = 'json';
-			xhr.open('GET', url, true);
-			xhr.onload  = function() {
-				var jsonResponse = xhr.response;
-				console.log(jsonResponse)
-				chrome.storage.sync.set({'acqs':jsonResponse})
-			};
-			xhr.send(null);
-		}
-		else{
 
+	chrome.tabs.query({active: true}, function(tabs) {
+		var tab_title = '';
+		var tab = tabs[0];
+		tab_title = tab.title;
+		if(tab.title != 'The SON'){
+			chrome.storage.sync.get("user", function (obj) {
+					document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations:</H2>";
+					var url = 'http://localhost:3000/api';
+					var xhr = new XMLHttpRequest();
+					var url = 'http://www.localhost:3000/api?name=' + obj.user[0];
+					xhr.responseType = 'json';
+					xhr.open('GET', url, true);
+					xhr.onload  = function() {
+						var jsonResponse = xhr.response;
+						console.log(jsonResponse)
+						chrome.storage.sync.set({'acqs':jsonResponse})
+					};
+					xhr.send(null);
+				})
+			}
+		else{
 			//get user login + save data + show data on ext
 			function display_h1 (results){
 				h1=results;
@@ -70,16 +75,10 @@ function sync(){
 				};
 				xhr.send(null);
 				}
-			chrome.tabs.query({active: true}, function(tabs) {
-				var tab_title = '';
-				var tab = tabs[0];
-				tab_title = tab.title;
-				if(tab.title == 'The SON')
 					chrome.tabs.executeScript(tab.id, {
 					code: 'document.getElementById("email").value + "/" + document.getElementById("psw").value'
 				}, display_h1);
-			});
 		}
 	})
-	getFaces();
+	getFaces('');
 };
