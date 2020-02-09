@@ -199,6 +199,22 @@ io.on('connection', function (socket) {
                 for(fr in user.friends){
                     for(acq in user.friends){
                         if(user.friends[acq].sn != user.friends[fr].sn){
+                            if(user.friends[acq].sn == "lastfm"){
+                                if(user.lastfm_linked == true){
+                                    var isLinked = true; 
+                                }
+                            } else if(user.friends[acq].sn == "twitter"){
+                                if(user.twitter_linked == true){
+                                    var isLinked = true;
+                                }
+                            } else if(user.friends[acq].sn == "vk"){
+                                if(user.vk_linked == true){
+                                    var isLinked = true;
+                                }
+                            } else {
+                                var isLinked = false;
+                            }
+                            if(isLinked){
                                 for(f in user.friends[fr].friends){
                                     // console.log(user.friends[fr].friends[f].name);
                                     // console.log("____");
@@ -222,6 +238,7 @@ io.on('connection', function (socket) {
                                         }
                                     }
                                 }
+                            }
                         }
                     }
                 }
