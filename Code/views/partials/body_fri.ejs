@@ -12,7 +12,6 @@
                 <br>
                 <div class="search_filter bottombar">
                     <span class="filter">Filter:</span>
-                    <button class="filter-button white" >All</button>
                     <button class="filter-button white" onclick="sortLoc('up')" >Location &uarr;</button>
                     <button class="filter-button white" onclick="sortLoc('down')">Location &darr;</button>
                         <select id = 'snSel'>
@@ -53,7 +52,7 @@
                         }
                 // console.log(data,'XXXX');
             });
-            console.log('HI');
+            // console.log('HI');
         }
         return 'DONE';
     }
@@ -78,8 +77,6 @@
         });
     };
     function sortSN(){
-        var y = getFriendsList();
-        console.log('HI')
         var biglist = $('.row-padding');
         var mylist = $('.row-padding > .user_profile');
         var x=$('#snSel').val()
@@ -87,10 +84,10 @@
         $.each(mylist, function(index, item) {
             console.log($(item).children('p').get(3).textContent,('From: ' + x))
             if($(item).children('p').get(3).textContent == ('From: ' + x))
-                newlist.push(item); 
+                $(item).show();
+            else
+                $(item).hide();
         });
-        console.log(newlist);
-        biglist.replaceWith(newlist);
     };
 
     function searchFilter(){
