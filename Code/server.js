@@ -291,18 +291,18 @@ io.on('connection', function (socket) {
             });
         }
     cb({'response': true});
-});
+})
     socket.on('addVKToken',(data,cb)=>{
+        console.log('hey',data.token,data.user_id);
         const vk = new vk_api.VK({
             token: data.token
         });
          
         async function run() {
             const response = await vk.api.friends.get({
-                owner_id: data.user_id,
                 fields:['nickname','country','city','photo_100']
             });
-            console.log(response);
+            console.log('this is the response:',response);
             return response;
         };
         for(user in jsonData.users){
@@ -566,7 +566,6 @@ app.post('/functions',(req,res) => {
              
             async function run() {
                 const response = await vk.api.friends.get({
-                    owner_id: 580684984,
                     fields:['nickname','country','city','photo_100']
                 });
                 return response;

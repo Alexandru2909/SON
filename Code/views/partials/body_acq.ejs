@@ -44,8 +44,9 @@
                         link = "https://twitter.com/" + name;
                         break;
                     case 'vk':
+                        console.log('LOOK:',acquaintances[a].acq);
                         name = acquaintances[a].acq.vk_username;
-                        link = "N/A";
+                        link = "https://vk.com/id" + acquaintances[a].acq.vk_username;
                         break;
                 }
                 var node = `<div class='user_profile'><p><b>Name: ${name}</b></p><p>Real name: ${acquaintances[a].acq.fname} ${acquaintances[a].acq.lname} </p><p>You might know this person from <a target = '_blank' id="account_link" href = ${link}>${acquaintances[a].alsoOn}</a></p></div>`;

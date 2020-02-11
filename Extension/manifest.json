@@ -13,7 +13,7 @@
       "js": ["jquery-3.4.1.min.js", "contentSON.js"]
     },
     {
-      "matches": ["https://www.vk.com/*"],
+      "matches": ["https://vk.com/feed"],
       "js": ["jquery-3.4.1.min.js", "contentVK.js"]
     },
     {

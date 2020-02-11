@@ -180,7 +180,7 @@ module.exports = {
 								else var cnt = '';
 								var obj = {
 									img: friends[index].photo_100.split('?ava')[0],
-									name: friends[index].nickname,
+									name: friends[index].first_name + ' ' + friends[index].last_name,
 									real_name: friends[index].first_name + ' ' + friends[index].last_name,
 									country: cnt,
 									from: 'VK',
@@ -231,7 +231,7 @@ module.exports = {
 								lname : acq.acq.lname,
 								sn : acq.alsoOn,
 								sn_username: acq.acq.vk_username,
-								link : ""
+								link : "https://vk.com/id" + acq.acq.vk_username
 							}
 							ret_json.users.push(obj);
 							break;

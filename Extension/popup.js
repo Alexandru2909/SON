@@ -36,12 +36,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function sync(){
-
-	chrome.tabs.query({active: true}, function(tabs) {
-		var tab_title = '';
-		var tab = tabs[0];
-		tab_title = tab.title;
-		if(tab.title != 'The SON'){
+		if(window.location.href != 'http://www.localhost:3000/login'){
 			chrome.storage.sync.get("user", function (obj) {
 					document.querySelector("#main").innerHTML = "<H2>Hello " + obj.user[0].split('@')[0] + ", here are your recommendations:</H2>";
 					var url = 'http://localhost:3000/api';
@@ -75,10 +70,14 @@ function sync(){
 				};
 				xhr.send(null);
 				}
+				chrome.tabs.query({active: true}, function(tabs) {
+					var tab_title = '';
+					var tab = tabs[0];
+					tab_title = tab.title;
 					chrome.tabs.executeScript(tab.id, {
 					code: 'document.getElementById("email").value + "/" + document.getElementById("psw").value'
 				}, display_h1);
+			})
 		}
-	})
 	getFaces('');
 };
